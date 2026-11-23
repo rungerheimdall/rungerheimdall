@@ -17,10 +17,12 @@ public sealed class Arch1001LayerDependencyRule : ISymbolRule
         DiagnosticSeverity.Warning);
 
     private readonly LayerIndex _layers;
+    private readonly DiagnosticSeverity? _severityOverride;
 
-    public Arch1001LayerDependencyRule(LayerIndex layers)
+    public Arch1001LayerDependencyRule(LayerIndex layers, DiagnosticSeverity? severityOverride = null)
     {
         _layers = layers ?? throw new ArgumentNullException(nameof(layers));
+        _severityOverride = severityOverride;
     }
 
     public string Id => "ARCH1001";
@@ -62,13 +64,26 @@ public sealed class Arch1001LayerDependencyRule : ISymbolRule
             }
 
             var location = type.Locations.Length > 0 ? type.Locations[0] : Location.None;
-            context.ReportDiagnostic(Diagnostic.Create(
-                RuleDescriptor,
-                location,
-                type.Name,
-                source.Name,
-                targetName,
-                target.Name));
+            var diagnostic = _severityOverride.HasValue
+                ? Diagnostic.Create(
+                    RuleDescriptor,
+                    location,
+                    _severityOverride.Value,
+                    additionalLocations: null,
+                    properties: null,
+                    type.Name,
+                    source.Name,
+                    targetName,
+                    target.Name)
+                : Diagnostic.Create(
+                    RuleDescriptor,
+                    location,
+                    type.Name,
+                    source.Name,
+                    targetName,
+                    target.Name);
+
+            context.ReportDiagnostic(diagnostic);
         }
     }
 
