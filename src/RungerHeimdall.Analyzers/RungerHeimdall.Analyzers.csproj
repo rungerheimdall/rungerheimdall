@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RungerHeimdall.Analyzers.Architecture\RungerHeimdall.Analyzers.Architecture.csproj" />
-    <ProjectReference Include="..\RungerHeimdall.Analyzers.Performance\RungerHeimdall.Analyzers.Performance.csproj" />
+    <ProjectReference Include="..\RungerHeimdall.Analyzers.Architecture\RungerHeimdall.Analyzers.Architecture.csproj" PrivateAssets="none" />
+    <ProjectReference Include="..\RungerHeimdall.Analyzers.Performance\RungerHeimdall.Analyzers.Performance.csproj" PrivateAssets="none" />
   </ItemGroup>
 
 </Project>
