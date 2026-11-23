@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>RungerHeimdall</RootNamespace>
+    <AssemblyName>RungerHeimdall.Abstractions</AssemblyName>
+    <IsPackable>true</IsPackable>
+    <PackageId>RungerHeimdall.Abstractions</PackageId>
+    <Description>Public attributes for RungerHeimdall analyzers and source generators.</Description>
+    <PackageTags>roslyn;architecture;performance;source-generator</PackageTags>
+  </PropertyGroup>
+
+</Project>

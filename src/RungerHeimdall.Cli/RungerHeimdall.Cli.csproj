@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>RungerHeimdall.Cli</RootNamespace>
+    <AssemblyName>heimdall</AssemblyName>
+    <IsPackable>true</IsPackable>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>heimdall</ToolCommandName>
+    <PackageId>RungerHeimdall.Cli</PackageId>
+    <Description>Command line interface for RungerHeimdall.</Description>
+    <PackageTags>roslyn;architecture;performance;cli</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RungerHeimdall.Engine\RungerHeimdall.Engine.csproj" />
+  </ItemGroup>
+
+</Project>
