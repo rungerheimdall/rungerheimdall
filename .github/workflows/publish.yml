@@ -31,9 +31,25 @@ jobs:
         with:
           user: ${{ secrets.NUGET_USER }}
 
-      - name: NuGet push
-        run: >
-          dotnet nuget push artifacts/*.nupkg
-          --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
-          --source https://api.nuget.org/v3/index.json
-          --skip-duplicate
+      - name: Push base packages
+        run: |
+          for pkg in \
+            artifacts/RungerHeimdall.Abstractions.*.nupkg \
+            artifacts/RungerHeimdall.Engine.*.nupkg \
+            artifacts/RungerHeimdall.Analyzers.Architecture.*.nupkg \
+            artifacts/RungerHeimdall.Analyzers.Performance.*.nupkg \
+            artifacts/RungerHeimdall.Cli.*.nupkg; do
+            dotnet nuget push "$pkg" \
+              --api-key ${{ steps.login.outputs.NUGET_API_KEY }} \
+              --source https://api.nuget.org/v3/index.json \
+              --skip-duplicate
+          done
+
+      - name: Push meta package
+        run: |
+          for pkg in artifacts/RungerHeimdall.Analyzers.[0-9]*.nupkg; do
+            dotnet nuget push "$pkg" \
+              --api-key ${{ steps.login.outputs.NUGET_API_KEY }} \
+              --source https://api.nuget.org/v3/index.json \
+              --skip-duplicate
+          done
