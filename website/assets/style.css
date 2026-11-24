@@ -205,11 +205,26 @@ a:hover {
 }
 
 .footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
   padding: 1.5rem;
   border-top: 1px solid var(--border);
   color: #6b7077;
   font-size: 0.8rem;
-  text-align: center;
+}
+
+.footer-org {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.footer-org img {
+  width: 18px;
+  height: 18px;
 }
 
 @media (max-width: 800px) {

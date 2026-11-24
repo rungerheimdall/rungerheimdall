@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RungerHeimdall brand</title>
+<style>
+  :root {
+    --bg: #141618;
+    --surface: #1c1e21;
+    --line: #2a2e33;
+    --text: #e6e8eb;
+    --muted: #9aa0a7;
+    --dim: #6b7077;
+    --accent: #c08a3e;
+    --mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; border-radius: 0; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid var(--line);
+    background: #17191c;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .topnav { display: flex; gap: 1.5rem; font-size: 0.9rem; }
+  .topnav a { color: var(--muted); text-decoration: none; }
+  .topnav a:hover { color: var(--text); }
+
+  main { max-width: 1120px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+
+  h1 { margin: 0 0 0.75rem; font-size: 2rem; letter-spacing: -0.02em; }
+  .lede { max-width: 700px; margin: 0 0 3rem; color: var(--muted); line-height: 1.7; }
+
+  h2 {
+    margin: 3rem 0 1rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .mark-block {
+    display: grid;
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .mark-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    background: #121416;
+  }
+
+  .mark-preview img { width: 220px; height: 220px; }
+
+  .mark-details { background: var(--surface); padding: 2rem; }
+  .mark-details h3 { margin: 0 0 0.5rem; font-size: 1.25rem; }
+  .mark-details p { margin: 0 0 1rem; color: var(--muted); line-height: 1.7; font-size: 0.92rem; }
+
+  .downloads { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .downloads a {
+    display: inline-block;
+    padding: 0.45rem 0.8rem;
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-decoration: none;
+  }
+  .downloads a:hover { border-color: var(--accent); color: var(--accent); }
+
+  .spec {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .spec div { background: var(--surface); padding: 1.25rem; }
+  .spec dt {
+    margin: 0 0 0.35rem;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .spec dd { margin: 0; font-size: 0.9rem; }
+
+  .swatches { display: flex; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .swatch { flex: 1; padding: 1.25rem; background: var(--surface); }
+  .swatch .chip { height: 48px; margin-bottom: 0.6rem; }
+  .swatch .name { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
+
+  .rules { margin: 0; padding-left: 1.2rem; color: var(--muted); line-height: 1.9; font-size: 0.92rem; }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    color: var(--dim);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  footer img { width: 18px; height: 18px; }
+
+  @media (max-width: 760px) {
+    .mark-block { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html">
+    <img src="../assets/logo.svg" alt="" width="26" height="26">
+    <span>RungerHeimdall</span>
+  </a>
+  <nav class="topnav">
+    <a href="../architecture-rules.html">Rules</a>
+    <a href="../cli.html">CLI</a>
+    <a href="https://github.com/rungerheimdall/rungerheimdall">GitHub</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Brand</h1>
+  <p class="lede">
+    Two marks. The project mark is loud enough to survive a package listing; the organization
+    mark is quiet enough to sit in a GitHub avatar. Both are built on a 64 × 64 grid with
+    whole-pixel coordinates, mitred joins and no rounded corners.
+  </p>
+
+  <h2>Project — RungerHeimdall</h2>
+  <div class="mark-block">
+    <div class="mark-preview"><img src="project/strata-dark-460.png" alt="Strata project mark"></div>
+    <div class="mark-details">
+      <h3>Strata</h3>
+      <p>
+        Six blocks arranged into an upward wedge, with a gap between every piece. The lower
+        centre block is held at low opacity: a layer that is present but must not be crossed.
+        This is the project mark used in the site header, the hero, the favicon and the NuGet
+        package icon.
+      </p>
+      <p>
+        The mark is drawn from filled rectangles, not strokes, so it keeps its shape at 16 px.
+        Amber <code>#C08A3E</code> on dark <code>#141618</code>.
+      </p>
+      <div class="downloads">
+        <a href="project/strata.svg">SVG</a>
+        <a href="project/strata-128.png">PNG 128</a>
+        <a href="project/strata-460.png">PNG 460</a>
+        <a href="project/social-preview.png">Social 1280×640</a>
+      </div>
+    </div>
+  </div>
+
+  <h2>Organization — Rungerheimdall</h2>
+  <div class="mark-block">
+    <div class="mark-preview"><img src="org/concentric-dark-460.png" alt="Concentric organization mark"></div>
+    <div class="mark-details">
+      <h3>Concentric</h3>
+      <p>
+        Three nested realms with the innermost one filled. Territory, seal, runic stone.
+        This is the organization mark: it appears in the GitHub organization avatar and in
+        the site footer, never as the product icon.
+      </p>
+      <p>
+        Drawn as filled polygons so the joins stay mitred at any size. The 460 px export is
+        the GitHub avatar master; a transparent version is included for other surfaces.
+      </p>
+      <div class="downloads">
+        <a href="org/concentric.svg">SVG</a>
+        <a href="org/concentric-128.png">PNG 128</a>
+        <a href="org/concentric-dark-460.png">PNG 460 dark</a>
+        <a href="org/concentric-transparent-460.png">PNG 460 transparent</a>
+      </div>
+    </div>
+  </div>
+
+  <h2>System</h2>
+  <div class="spec">
+    <div>
+      <dt>Grid</dt>
+      <dd>64 × 64, whole-pixel coordinates</dd>
+    </div>
+    <div>
+      <dt>Stroke</dt>
+      <dd>Mitred joins, square caps, no rounding</dd>
+    </div>
+    <div>
+      <dt>Forbidden</dt>
+      <dd>Gradients, shadows, nested outlines, rounded corners</dd>
+    </div>
+    <div>
+      <dt>Clear space</dt>
+      <dd>At least one block width on every side</dd>
+    </div>
+  </div>
+
+  <h2>Color</h2>
+  <div class="swatches">
+    <div class="swatch">
+      <div class="chip" style="background:#C08A3E"></div>
+      <div class="name">Amber #C08A3E</div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#8A5E22"></div>
+      <div class="name">Shadow #8A5E22</div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#141618"></div>
+      <div class="name">Field #141618</div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#E6E8EB"></div>
+      <div class="name">Paper #E6E8EB</div>
+    </div>
+  </div>
+
+  <h2>Usage</h2>
+  <ul class="rules">
+    <li>The project mark is always Strata. Do not substitute Concentric for product surfaces.</li>
+    <li>The organization mark is always Concentric. It may appear next to the project name, never inside a package icon.</li>
+    <li>Minimum size: Strata 16 px, Concentric 32 px.</li>
+    <li>Do not recolor the marks. Do not place either mark on a photographic background.</li>
+  </ul>
+
+  <footer>
+    <img src="org/concentric.svg" alt="">
+    <span>Rungerheimdall organization · RungerHeimdall project · MIT licensed</span>
+  </footer>
+</main>
+</body>
+</html>

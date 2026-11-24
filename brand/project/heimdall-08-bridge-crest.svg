@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="#C08A3E" stroke-linecap="square" stroke-linejoin="miter">
-  <circle cx="32" cy="32" r="29" stroke-width="2"/>
-  <circle cx="32" cy="32" r="25" stroke-width="1"/>
-  <path d="M10 44Q32 18 54 44" stroke-width="4"/>
-  <path d="M18 44V54" stroke-width="4"/>
-  <path d="M46 44V54" stroke-width="4"/>
-  <path d="M14 54H50" stroke-width="4"/>
-  <circle cx="32" cy="29" r="3" fill="#C08A3E" stroke="none"/>
-</svg>

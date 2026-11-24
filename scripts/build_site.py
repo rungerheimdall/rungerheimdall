@@ -63,7 +63,7 @@ TEMPLATE = """<!DOCTYPE html>
   <nav class="topnav">
     <a href="architecture-rules.html">Rules</a>
     <a href="cli.html">CLI</a>
-    <a href="brand/preview.html">Brand</a>
+    <a href="brand/">Brand</a>
     <a href="https://github.com/rungerheimdall/rungerheimdall">GitHub</a>
   </nav>
 </header>
@@ -80,6 +80,7 @@ TEMPLATE = """<!DOCTYPE html>
   </main>
 </div>
 <footer class="footer">
+  <span class="footer-org"><img src="assets/concentric.svg" alt="" width="18" height="18"> Rungerheimdall</span>
   <span>MIT licensed. Copyright © 2026 RungerHeimdall contributors.</span>
 </footer>
 </body>
@@ -127,6 +128,7 @@ def main() -> None:
     shutil.copy2(ASSETS / "style.css", OUT / "assets" / "style.css")
     shutil.copy2(ASSETS / "logo.svg", OUT / "assets" / "logo.svg")
     shutil.copy2(ASSETS / "favicon.svg", OUT / "assets" / "favicon.svg")
+    shutil.copy2(ASSETS / "concentric.svg", OUT / "assets" / "concentric.svg")
     shutil.copy2(ASSETS / "index.html", OUT / "index.html")
 
     brand = ROOT / "brand"
