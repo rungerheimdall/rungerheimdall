@@ -44,7 +44,7 @@ public sealed class Perf2007TaskFromResultRule : IOperationRule
             return;
         }
 
-        if (!IsInsideLoop(invocation) && !_hotPath.IsHot(context.OwningSymbol))
+        if (!IsInsideLoop(invocation) && !_hotPath.IsHot(context.InnermostSymbol))
         {
             return;
         }

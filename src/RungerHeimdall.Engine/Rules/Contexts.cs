@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace RungerHeimdall.Engine.Rules;
 
@@ -38,6 +39,7 @@ public readonly struct OperationContext
     {
         Operation = operation;
         OwningSymbol = owningSymbol;
+        InnermostSymbol = FindInnermostSymbol(operation, owningSymbol);
         Compilation = compilation;
         ReportDiagnostic = reportDiagnostic;
         CancellationToken = cancellationToken;
@@ -47,9 +49,28 @@ public readonly struct OperationContext
 
     public ISymbol? OwningSymbol { get; }
 
+    public ISymbol? InnermostSymbol { get; }
+
     public Compilation Compilation { get; }
 
     public Action<Diagnostic> ReportDiagnostic { get; }
 
     public CancellationToken CancellationToken { get; }
+
+    private static ISymbol? FindInnermostSymbol(IOperation operation, ISymbol? fallback)
+    {
+        for (var current = operation; current is not null; current = current.Parent)
+        {
+            switch (current)
+            {
+                case IAnonymousFunctionOperation anonymous:
+                    return anonymous.Symbol;
+
+                case ILocalFunctionOperation local:
+                    return local.Symbol;
+            }
+        }
+
+        return fallback;
+    }
 }

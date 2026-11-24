@@ -23,6 +23,23 @@ internal static class TestHarness
         string? projectDirectory,
         params AdditionalText[] additionalFiles)
     {
+        return await AnalyzeWithConfigAsync(
+            source,
+            analyzer,
+            projectDirectory is null
+                ? new Dictionary<string, string>()
+                : new Dictionary<string, string> { ["build_property.MSBuildProjectDirectory"] = projectDirectory },
+            path,
+            additionalFiles);
+    }
+
+    public static async Task<ImmutableArray<Diagnostic>> AnalyzeWithConfigAsync(
+        string source,
+        DiagnosticAnalyzer analyzer,
+        Dictionary<string, string> config,
+        string? path = null,
+        params AdditionalText[] additionalFiles)
+    {
         var tree = CSharpSyntaxTree.ParseText(source, path: path ?? string.Empty);
         var compilation = CSharpCompilation.Create(
             "TestAssembly",
@@ -32,7 +49,7 @@ internal static class TestHarness
 
         var options = new AnalyzerOptions(
             additionalFiles.ToImmutableArray(),
-            new TestAnalyzerConfigOptionsProvider(projectDirectory));
+            new TestAnalyzerConfigOptionsProvider(config));
 
         var withAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create(analyzer), options);
         return await withAnalyzers.GetAnalyzerDiagnosticsAsync();
@@ -81,6 +98,11 @@ internal sealed class TestAnalyzerConfigOptionsProvider : AnalyzerConfigOptionsP
             values["build_property.MSBuildProjectDirectory"] = projectDirectory!;
         }
 
+        _globalOptions = new TestAnalyzerConfigOptions(values);
+    }
+
+    public TestAnalyzerConfigOptionsProvider(Dictionary<string, string> values)
+    {
         _globalOptions = new TestAnalyzerConfigOptions(values);
     }
 

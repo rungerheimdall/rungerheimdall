@@ -18,9 +18,13 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
             Perf1002CountRule.RuleDescriptor,
             Perf1003ToListBeforeForeachRule.RuleDescriptor,
             Perf1004StringConcatInLoopRule.RuleDescriptor,
+            Perf1005ClosureLoopVariableRule.RuleDescriptor,
+            Perf1006ClockOnHotPathRule.RuleDescriptor,
             Perf1007EnumHasFlagRule.RuleDescriptor,
+            Perf1008StructDefaultComparerRule.RuleDescriptor,
             Perf1009SubstringSpanRule.RuleDescriptor,
             Perf1010RegexSourceGeneratedRule.RuleDescriptor,
+            Perf1011ValueTypeForeachRule.RuleDescriptor,
             Perf1012StringComparisonRule.RuleDescriptor,
             Perf2001LinqInLoopRule.RuleDescriptor,
             Perf2002TaskRunInAsyncRule.RuleDescriptor,
@@ -40,7 +44,7 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
 
     private static void OnCompilationStart(CompilationStartAnalysisContext context)
     {
-        var hotPath = new HotPathRegistry();
+        var hotPath = new HotPathRegistry(context.Compilation, context.Options.AnalyzerConfigOptionsProvider);
 
         var engine = new RuleEngine(new IRule[]
         {
@@ -48,9 +52,13 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
             new Perf1002CountRule(),
             new Perf1003ToListBeforeForeachRule(),
             new Perf1004StringConcatInLoopRule(),
+            new Perf1005ClosureLoopVariableRule(),
+            new Perf1006ClockOnHotPathRule(hotPath),
             new Perf1007EnumHasFlagRule(),
+            new Perf1008StructDefaultComparerRule(),
             new Perf1009SubstringSpanRule(),
             new Perf1010RegexSourceGeneratedRule(),
+            new Perf1011ValueTypeForeachRule(),
             new Perf1012StringComparisonRule(),
             new Perf2001LinqInLoopRule(hotPath),
             new Perf2002TaskRunInAsyncRule(),
@@ -140,7 +148,8 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
         OperationKind.Loop,
         OperationKind.Binary,
         OperationKind.CompoundAssignment,
-        OperationKind.PropertyReference);
+        OperationKind.PropertyReference,
+        OperationKind.AnonymousFunction);
     }
 
     private static string? ReadProjectDirectory(AnalyzerOptions options)

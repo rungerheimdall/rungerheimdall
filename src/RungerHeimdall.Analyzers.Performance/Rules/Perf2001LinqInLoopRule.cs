@@ -33,7 +33,7 @@ public sealed class Perf2001LinqInLoopRule : IOperationRule
             return;
         }
 
-        if (_hotPath.IsCold(context.OwningSymbol))
+        if (_hotPath.IsCold(context.InnermostSymbol))
         {
             return;
         }
