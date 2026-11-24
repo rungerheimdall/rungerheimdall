@@ -104,6 +104,7 @@ def render_html(rules: list[dict]) -> str:
   </a>
   <nav class="topnav">
     <a href="rules.html">Rules</a>
+    <a href="playground.html">Playground</a>
     <a href="cli.html">CLI</a>
     <a href="brand/">Brand</a>
     <a href="https://github.com/rungerheimdall/rungerheimdall">GitHub</a>

@@ -62,6 +62,7 @@ TEMPLATE = """<!DOCTYPE html>
   </a>
   <nav class="topnav">
     <a href="rules.html">Rules</a>
+    <a href="playground.html">Playground</a>
     <a href="cli.html">CLI</a>
     <a href="brand/">Brand</a>
     <a href="https://github.com/rungerheimdall/rungerheimdall">GitHub</a>
@@ -132,6 +133,7 @@ def main() -> None:
     shutil.copy2(ASSETS / "index.html", OUT / "index.html")
     shutil.copy2(ROOT / "website" / "rules.html", OUT / "rules.html")
     shutil.copy2(ROOT / "website" / "rules.json", OUT / "rules.json")
+    shutil.copy2(ASSETS / "playground.html", OUT / "playground.html")
 
     brand = ROOT / "brand"
     if brand.exists():
