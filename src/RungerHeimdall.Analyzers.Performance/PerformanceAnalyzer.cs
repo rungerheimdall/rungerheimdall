@@ -24,6 +24,9 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
             Perf2002TaskRunInAsyncRule.RuleDescriptor,
             Perf2003AsyncVoidRule.RuleDescriptor,
             Perf2004BlockingTaskRule.RuleDescriptor,
+            Perf2005MultipleEnumerationRule.RuleDescriptor,
+            Perf2006ValueTaskReuseRule.RuleDescriptor,
+            Perf2007TaskFromResultRule.RuleDescriptor,
             Perf2008ArrayResizeInLoopRule.RuleDescriptor);
 
     public override void Initialize(AnalysisContext context)
@@ -51,6 +54,9 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
             new Perf2002TaskRunInAsyncRule(),
             new Perf2003AsyncVoidRule(),
             new Perf2004BlockingTaskRule(),
+            new Perf2005MultipleEnumerationRule(),
+            new Perf2006ValueTaskReuseRule(),
+            new Perf2007TaskFromResultRule(hotPath),
             new Perf2008ArrayResizeInLoopRule(),
         });
 
