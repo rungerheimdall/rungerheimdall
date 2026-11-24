@@ -13,9 +13,21 @@ dotnet tool install -g RungerHeimdall.Cli --version 1.0.0
 |---------|---------|
 | `heimdall init` | Create `architecture.json` using the current project file name as the namespace root. |
 | `heimdall init --strict` | Same, with every rule set to `error`. |
+| `heimdall analyze [path]` | Run all analyzers and print findings. Use `--format console`, `json` or `markdown`. |
 | `heimdall baseline create [path]` | Scan a directory, solution or project and write `heimdall-baseline.json`. |
 | `heimdall doctor` | Print runtime details and whether a configuration file was found. |
 | `heimdall --version` | Print the tool version. |
+
+## analyze
+
+```bash
+$ heimdall analyze . --format console
+Shop.Domain/OrderService.cs:3:21 warning ARCH1001 'OrderService' is in layer 'Domain' but depends on 'Shop.Infrastructure.SqlRepository' in layer 'Infrastructure'. Dependencies must flow inward.
+
+Total: 1
+```
+
+`--format markdown` prints the same findings as a table, ready for a pull request comment.
 
 ## init
 

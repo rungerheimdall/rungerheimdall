@@ -55,6 +55,7 @@ dotnet tool install -g RungerHeimdall.Cli --version 1.0.0
 
 heimdall init                      # create architecture.json
 heimdall init --strict             # create it with error severity
+heimdall analyze [path]            # print findings, --format console|json|markdown
 heimdall baseline create [path]    # freeze existing violations
 heimdall doctor                    # inspect environment and configuration
 ```
