@@ -4,12 +4,12 @@
 
 RungerHeimdall is a compiler-level guard for .NET: it turns architecture rules and hidden allocations into diagnostics you see in the IDE and in CI.
 
-**Status: pre-alpha.** Architecture rules ARCH1001–ARCH1008 are implemented. The performance analyzer currently ships PERF1001, PERF1002, PERF1007 and PERF1012. Nothing is stable yet.
+**Status: pre-alpha.** Architecture rules ARCH1001–ARCH1008 and performance rules PERF1001, PERF1002, PERF1003, PERF1004, PERF1007, PERF1009, PERF1010, PERF1012 are implemented. Nothing is stable yet.
 
 ## Install
 
 ```bash
-dotnet add package RungerHeimdall.Analyzers --version 0.1.0-preview.2
+dotnet add package RungerHeimdall.Analyzers --version 0.1.0-preview.3
 ```
 
 ## Quick start
@@ -31,12 +31,30 @@ Without a configuration file the analyzer falls back to convention-based layer i
 | ARCH1006 | Layer must not reference disallowed frameworks |
 | ARCH1007 | Avoid static mutable state |
 | ARCH1008 | Endpoint layer must not create infrastructure types |
+| PERF1001 | Avoid empty `params` array allocation |
 | PERF1002 | Avoid `Enumerable.Count()` on a countable collection |
+| PERF1003 | Avoid `ToList()` immediately followed by `foreach` |
+| PERF1004 | Avoid string concatenation inside loops |
+| PERF1007 | Avoid `Enum.HasFlag` boxing |
+| PERF1009 | Avoid `Substring` allocations for parsing and comparison |
+| PERF1010 | Prefer `[GeneratedRegex]` over `new Regex` |
+| PERF1012 | Avoid `ToLower`/`ToUpper` for comparison |
 
 All rules default to `warning`. Change severity per rule in `architecture.json`, or globally with `.editorconfig`:
 
 ```ini
 dotnet_diagnostic.ARCH1001.severity = error
+```
+
+## CLI
+
+```bash
+dotnet tool install -g RungerHeimdall.Cli --version 0.1.0-preview.3
+
+heimdall init                      # create architecture.json
+heimdall init --strict             # create it with error severity
+heimdall baseline create [path]    # freeze existing violations
+heimdall doctor                    # inspect environment and configuration
 ```
 
 ## Configuration
