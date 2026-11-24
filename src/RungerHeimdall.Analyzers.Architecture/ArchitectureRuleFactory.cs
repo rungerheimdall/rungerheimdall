@@ -10,7 +10,10 @@ namespace RungerHeimdall.Analyzers.Architecture;
 
 public static class ArchitectureRuleFactory
 {
-    public static ImmutableArray<IRule> Create(ArchitectureConfig config, LayerIndex layers)
+    public static ImmutableArray<IRule> Create(
+        ArchitectureConfig config,
+        LayerIndex layers,
+        string? projectDirectory = null)
     {
         var builder = ImmutableArray.CreateBuilder<IRule>();
         builder.Add(new Arch1001LayerDependencyRule(
@@ -27,6 +30,10 @@ public static class ArchitectureRuleFactory
 
                 case "forbiddennamespace":
                     builder.Add(new Arch1003ForbiddenNamespaceRule(layers, rule));
+                    break;
+
+                case "namespacematchesfolder":
+                    builder.Add(new Arch1004NamespaceMatchesFolderRule(layers, rule, projectDirectory));
                     break;
             }
         }

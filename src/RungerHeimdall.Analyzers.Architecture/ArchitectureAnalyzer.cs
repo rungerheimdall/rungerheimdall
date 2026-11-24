@@ -23,6 +23,7 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
             Arch1001LayerDependencyRule.RuleDescriptor,
             Arch1002ForbiddenTypeRule.RuleDescriptor,
             Arch1003ForbiddenNamespaceRule.RuleDescriptor,
+            Arch1004NamespaceMatchesFolderRule.RuleDescriptor,
             ConfigurationErrorDescriptor);
 
     public override void Initialize(AnalysisContext context)
@@ -54,7 +55,7 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
         if (found && config is not null)
         {
             layers = config.BuildLayerIndex();
-            rules = ArchitectureRuleFactory.Create(config, layers);
+            rules = ArchitectureRuleFactory.Create(config, layers, ReadProjectDirectory(context.Options));
         }
         else
         {
@@ -62,7 +63,7 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
             rules = ImmutableArray.Create<IRule>(new Arch1001LayerDependencyRule(layers));
         }
 
-        if (layers.IsEmpty || rules.IsEmpty)
+        if (rules.IsEmpty)
         {
             return;
         }
@@ -102,5 +103,18 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
         OperationKind.MethodReference,
         OperationKind.EventReference,
         OperationKind.TypeOf);
+    }
+
+    private static string? ReadProjectDirectory(AnalyzerOptions options)
+    {
+        var provider = options.AnalyzerConfigOptionsProvider;
+        if (provider is null)
+        {
+            return null;
+        }
+
+        return provider.GlobalOptions.TryGetValue("build_property.MSBuildProjectDirectory", out var value)
+            ? value
+            : null;
     }
 }

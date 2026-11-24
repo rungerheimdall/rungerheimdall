@@ -5,5 +5,7 @@
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
-ARCH1001 | Architecture | Warning | Layer dependency directionARCH1002 | Architecture | Warning | Forbidden type reference
+ARCH1001 | Architecture | Warning | Layer dependency direction
+ARCH1002 | Architecture | Warning | Forbidden type reference
 ARCH1003 | Architecture | Warning | Forbidden namespace reference
+ARCH1004 | Architecture | Warning | Namespace must match folder

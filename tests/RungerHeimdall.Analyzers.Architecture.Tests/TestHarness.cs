@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Text;
@@ -17,17 +18,38 @@ internal static class TestHarness
         params AdditionalText[] additionalFiles)
     {
         var tree = CSharpSyntaxTree.ParseText(source);
-        var compilation = CSharpCompilation.Create(
-            "TestAssembly",
-            new[] { tree },
-            GetReferences(),
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        var compilation = CreateCompilation(tree);
 
         var withAnalyzers = additionalFiles.Length == 0
             ? compilation.WithAnalyzers(ImmutableArray.Create(analyzer))
             : compilation.WithAnalyzers(ImmutableArray.Create(analyzer), new AnalyzerOptions(additionalFiles.ToImmutableArray()));
 
         return await withAnalyzers.GetAnalyzerDiagnosticsAsync();
+    }
+
+    public static async Task<ImmutableArray<Diagnostic>> AnalyzeWithPathAsync(
+        string source,
+        DiagnosticAnalyzer analyzer,
+        string? path,
+        string? projectDirectory,
+        params AdditionalText[] additionalFiles)
+    {
+        var tree = CSharpSyntaxTree.ParseText(source, path: path ?? string.Empty);
+        var compilation = CreateCompilation(tree);
+        var provider = new TestAnalyzerConfigOptionsProvider(projectDirectory);
+        var options = new AnalyzerOptions(additionalFiles.ToImmutableArray(), provider);
+        var withAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create(analyzer), options);
+
+        return await withAnalyzers.GetAnalyzerDiagnosticsAsync();
+    }
+
+    private static CSharpCompilation CreateCompilation(SyntaxTree tree)
+    {
+        return CSharpCompilation.Create(
+            "TestAssembly",
+            new[] { tree },
+            GetReferences(),
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
     }
 
     private static IEnumerable<MetadataReference> GetReferences()
@@ -58,5 +80,52 @@ internal sealed class InMemoryAdditionalText : AdditionalText
     public override SourceText GetText(CancellationToken cancellationToken = default)
     {
         return _text;
+    }
+}
+
+internal sealed class TestAnalyzerConfigOptionsProvider : AnalyzerConfigOptionsProvider
+{
+    private readonly AnalyzerConfigOptions _globalOptions;
+
+    public TestAnalyzerConfigOptionsProvider(string? projectDirectory)
+    {
+        var values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (!string.IsNullOrEmpty(projectDirectory))
+        {
+            values["build_property.MSBuildProjectDirectory"] = projectDirectory!;
+        }
+
+        _globalOptions = new TestAnalyzerConfigOptions(values);
+    }
+
+    public override AnalyzerConfigOptions GlobalOptions => _globalOptions;
+
+    public override AnalyzerConfigOptions GetOptions(SyntaxTree tree) => TestAnalyzerConfigOptions.Empty;
+
+    public override AnalyzerConfigOptions GetOptions(AdditionalText textFile) => TestAnalyzerConfigOptions.Empty;
+}
+
+internal sealed class TestAnalyzerConfigOptions : AnalyzerConfigOptions
+{
+    public static readonly TestAnalyzerConfigOptions Empty =
+        new TestAnalyzerConfigOptions(new Dictionary<string, string>());
+
+    private readonly Dictionary<string, string> _values;
+
+    public TestAnalyzerConfigOptions(Dictionary<string, string> values)
+    {
+        _values = values;
+    }
+
+    public override bool TryGetValue(string key, out string value)
+    {
+        if (_values.TryGetValue(key, out var found))
+        {
+            value = found;
+            return true;
+        }
+
+        value = string.Empty;
+        return false;
     }
 }
