@@ -6,12 +6,12 @@
 
 RungerHeimdall is a compiler-level guard for .NET: it turns architecture rules and hidden allocations into diagnostics you see in the IDE and in CI.
 
-**Status: 1.0.0.** Eight architecture rules (ARCH1001–ARCH1008) and sixteen performance rules (PERF1001–PERF1012, PERF2001–PERF2008) are implemented and covered by tests. See the [rule reference](https://rungerheimdall.github.io/rungerheimdall/rules.html) for exact behaviour and measured impact.
+**Status: 1.0.1.** Eight architecture rules (ARCH1001–ARCH1008) and sixteen performance rules (PERF1001–PERF1012, PERF2001–PERF2008) are implemented and covered by tests. See the [rule reference](https://rungerheimdall.github.io/rungerheimdall/rules.html) for exact behaviour and measured impact.
 
 ## Install
 
 ```bash
-dotnet add package RungerHeimdall.Analyzers --version 1.0.0
+dotnet add package RungerHeimdall.Analyzers --version 1.0.1
 ```
 
 ## Quick start
@@ -59,7 +59,7 @@ dotnet_diagnostic.ARCH1001.severity = error
 ## CLI
 
 ```bash
-dotnet tool install -g RungerHeimdall.Cli --version 1.0.0
+dotnet tool install -g RungerHeimdall.Cli --version 1.0.1
 
 heimdall init                      # create architecture.json
 heimdall init --strict             # create it with error severity

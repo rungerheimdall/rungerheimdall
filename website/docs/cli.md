@@ -6,7 +6,7 @@ title: CLI
 # CLI
 
 ```bash
-dotnet tool install -g RungerHeimdall.Cli --version 1.0.0
+dotnet tool install -g RungerHeimdall.Cli --version 1.0.1
 ```
 
 | Command | Purpose |
