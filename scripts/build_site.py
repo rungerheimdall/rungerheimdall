@@ -63,6 +63,7 @@ TEMPLATE = """<!DOCTYPE html>
   <nav class="topnav">
     <a href="architecture-rules.html">Rules</a>
     <a href="cli.html">CLI</a>
+    <a href="brand/preview.html">Brand</a>
     <a href="https://github.com/rungerheimdall/rungerheimdall">GitHub</a>
   </nav>
 </header>
