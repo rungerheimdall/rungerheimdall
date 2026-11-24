@@ -38,7 +38,7 @@
   }
 
   .sub {
-    max-width: 720px;
+    max-width: 760px;
     margin: 0;
     color: var(--muted);
     line-height: 1.7;
@@ -61,7 +61,7 @@
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);
@@ -88,7 +88,7 @@
   .mark.dark { background: #121416; }
   .mark.light { background: #e6e8eb; }
 
-  .mark img { width: 84px; height: 84px; }
+  .mark img { width: 96px; height: 96px; }
 
   .mark.light img { filter: brightness(0); }
 
@@ -111,6 +111,14 @@
     font-size: 0.7rem;
     color: #6b7077;
     letter-spacing: 0.02em;
+  }
+
+  .ref {
+    margin-top: 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.04em;
   }
 
   .badge {
@@ -151,16 +159,35 @@
     padding: 1.75rem;
   }
 
-  .archived {
-    opacity: 0.45;
+  .archive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    opacity: 0.4;
   }
 
-  .archived .name {
-    font-size: 0.9rem;
+  .archive-grid .card {
+    background: var(--surface);
+    padding: 1rem;
   }
 
-  .archived .idea {
-    font-size: 0.8rem;
+  .archive-grid .mark {
+    padding: 1.25rem 0.5rem;
+  }
+
+  .archive-grid .mark img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .archive-grid .name {
+    font-size: 0.85rem;
+  }
+
+  .archive-grid .idea {
+    font-size: 0.78rem;
   }
 
   .spec {
@@ -209,10 +236,10 @@
 <header>
   <h1>RungerHeimdall identity exploration</h1>
   <p class="sub">
-    The organization mark is decided: <strong>Concentric</strong>. The project mark is on its second
-    round. Round 1 leaned on bridges and letterforms; round 2 moves toward architectural
-    structures — a keystone, a truss, a rune. Same construction rules throughout: 64 × 64 grid,
-    straight segments, mitred joins, no rounded corners.
+    The organization mark is decided: <strong>Concentric</strong>. The project mark is on round 3.
+    Rounds 1 and 2 were too quiet — a bridge, a letter, an arch. This round follows the
+    reference set directly: the layered volume of <em>UOE</em>, the crest logic of the
+    classical and winged badges, and the broken-block construction of the geometric triangle.
   </p>
 </header>
 
@@ -227,8 +254,8 @@
       <p class="name">Concentric</p>
       <p class="idea">
         Three nested realms with the innermost one filled. Territory, seal, runic stone.
-        Drawn as filled polygons rather than strokes so the joins stay perfectly mitred at any size.
-        The 460 px export above is the GitHub avatar master; a transparent version is included.
+        Drawn as filled polygons so the joins stay mitred at any size. The 460 px export is
+        the GitHub avatar master; a transparent version is included.
       </p>
       <p class="meta">territory · seal · nested · avatar-safe</p>
     </div>
@@ -254,82 +281,110 @@
 </section>
 
 <section>
-  <h2>Project — round 2</h2>
+  <h2>Project — round 3</h2>
   <div class="grid">
     <article class="card">
       <div class="marks">
-        <div class="mark dark"><img src="project/heimdall-04-keystone.svg" alt="Keystone mark"></div>
-        <div class="mark light"><img src="project/heimdall-04-keystone.svg" alt="Keystone mark on light"></div>
+        <div class="mark dark"><img src="project/heimdall-07-h-block.svg" alt="H Block mark"></div>
+        <div class="mark light"><img src="project/heimdall-07-h-block.svg" alt="H Block mark on light"></div>
       </div>
-      <p class="name">04 — Keystone</p>
+      <p class="name">07 — H Block</p>
       <p class="idea">
-        A single arch with one solid block at its crown. The keystone is the piece that keeps
-        the structure standing, which is exactly what an architecture rule is. Two elements,
-        no decoration, reads at 16 px.
+        A monogram built from solid planes, not strokes. Each upright has a darker side face,
+        so the letter reads as a volume. The crossbar sits on top of the join. This is the
+        closest match to the layered letterforms in the reference set.
       </p>
-      <p class="meta">constraint · structure · two elements</p>
+      <p class="ref">reference: UOE volume</p>
+      <p class="meta">monogram · volume · two tones</p>
     </article>
 
     <article class="card">
       <div class="marks">
-        <div class="mark dark"><img src="project/heimdall-05-truss.svg" alt="Truss mark"></div>
-        <div class="mark light"><img src="project/heimdall-05-truss.svg" alt="Truss mark on light"></div>
+        <div class="mark dark"><img src="project/heimdall-08-bridge-crest.svg" alt="Bridge Crest mark"></div>
+        <div class="mark light"><img src="project/heimdall-08-bridge-crest.svg" alt="Bridge Crest mark on light"></div>
       </div>
-      <p class="name">05 — Truss</p>
+      <p class="name">08 — Bridge Crest</p>
       <p class="idea">
-        A bridge deck with a trapezoidal truss and two vertical posts. Engineering rather than
-        symbolism: the mark looks like a structure that carries load, not a signal icon.
+        A crest, not an icon: double ring, bridge arch, two piers, a ground line and a single
+        watch point. The ring frames it the way the classical and winged references frame
+        their marks. The most "seal-like" option and the strongest at large sizes.
       </p>
-      <p class="meta">load · engineering · structural</p>
+      <p class="ref">reference: classical / winged badge</p>
+      <p class="meta">crest · seal · framed</p>
     </article>
 
     <article class="card">
       <div class="marks">
-        <div class="mark dark"><img src="project/heimdall-06-rune.svg" alt="Rune mark"></div>
-        <div class="mark light"><img src="project/heimdall-06-rune.svg" alt="Rune mark on light"></div>
+        <div class="mark dark"><img src="project/heimdall-09-strata.svg" alt="Strata mark"></div>
+        <div class="mark light"><img src="project/heimdall-09-strata.svg" alt="Strata mark on light"></div>
       </div>
-      <p class="name">06 — Rune</p>
+      <p class="name">09 — Strata</p>
       <p class="idea">
-        Two uprights crossed by a single diagonal, cut like a runic letter. The most distinct
-        silhouette of the six attempts and the one that carries the Nordic lineage without
-        quoting a literal horn or bridge.
+        Six blocks arranged into an upward wedge, with a gap between every piece. The lower
+        centre block is held at low opacity: a layer that is present but must not be crossed.
+        This is the broken-block construction of the geometric triangle reference.
       </p>
-      <p class="meta">rune · lineage · distinctive</p>
+      <p class="ref">reference: broken geometry</p>
+      <p class="meta">layers · gap · upward force</p>
     </article>
   </div>
 </section>
 
 <section>
-  <h2>Project — round 1 · archived</h2>
-  <div class="grid archived">
+  <h2>Archived — rounds 1 and 2</h2>
+  <div class="archive-grid">
     <article class="card">
       <div class="marks">
-        <div class="mark dark"><img src="project/heimdall-01-bifrost.svg" alt="Bifrost mark"></div>
-        <div class="mark light"><img src="project/heimdall-01-bifrost.svg" alt="Bifrost mark on light"></div>
+        <div class="mark dark"><img src="project/heimdall-01-bifrost.svg" alt="Bifrost"></div>
+        <div class="mark light"><img src="project/heimdall-01-bifrost.svg" alt="Bifrost on light"></div>
       </div>
       <p class="name">01 — Bifrost</p>
-      <p class="idea">Two arches and a deck. Read too close to a wireless signal icon at small sizes.</p>
-      <p class="meta">superseded</p>
+      <p class="idea">Read as a wireless signal at small sizes.</p>
     </article>
 
     <article class="card">
       <div class="marks">
-        <div class="mark dark"><img src="project/heimdall-02-h-monogram.svg" alt="H monogram mark"></div>
-        <div class="mark light"><img src="project/heimdall-02-h-monogram.svg" alt="H monogram mark on light"></div>
+        <div class="mark dark"><img src="project/heimdall-02-h-monogram.svg" alt="H Monogram"></div>
+        <div class="mark light"><img src="project/heimdall-02-h-monogram.svg" alt="H Monogram on light"></div>
       </div>
       <p class="name">02 — H Monogram</p>
-      <p class="idea">A letter first, a concept second. Legible, but it could belong to any product.</p>
-      <p class="meta">superseded</p>
+      <p class="idea">A letter first, a concept second.</p>
     </article>
 
     <article class="card">
       <div class="marks">
-        <div class="mark dark"><img src="project/heimdall-03-watchtower.svg" alt="Watchtower mark"></div>
-        <div class="mark light"><img src="project/heimdall-03-watchtower.svg" alt="Watchtower mark on light"></div>
+        <div class="mark dark"><img src="project/heimdall-03-watchtower.svg" alt="Watchtower"></div>
+        <div class="mark light"><img src="project/heimdall-03-watchtower.svg" alt="Watchtower on light"></div>
       </div>
       <p class="name">03 — Watchtower</p>
-      <p class="idea">A hexagonal keep with an eye. Too close to security-vendor iconography.</p>
-      <p class="meta">superseded</p>
+      <p class="idea">Too close to security-vendor iconography.</p>
+    </article>
+
+    <article class="card">
+      <div class="marks">
+        <div class="mark dark"><img src="project/heimdall-04-keystone.svg" alt="Keystone"></div>
+        <div class="mark light"><img src="project/heimdall-04-keystone.svg" alt="Keystone on light"></div>
+      </div>
+      <p class="name">04 — Keystone</p>
+      <p class="idea">Correct idea, too few elements.</p>
+    </article>
+
+    <article class="card">
+      <div class="marks">
+        <div class="mark dark"><img src="project/heimdall-05-truss.svg" alt="Truss"></div>
+        <div class="mark light"><img src="project/heimdall-05-truss.svg" alt="Truss on light"></div>
+      </div>
+      <p class="name">05 — Truss</p>
+      <p class="idea">Engineering feel, weak silhouette.</p>
+    </article>
+
+    <article class="card">
+      <div class="marks">
+        <div class="mark dark"><img src="project/heimdall-06-rune.svg" alt="Rune"></div>
+        <div class="mark light"><img src="project/heimdall-06-rune.svg" alt="Rune on light"></div>
+      </div>
+      <p class="name">06 — Rune</p>
+      <p class="idea">Distinct, but still only three lines.</p>
     </article>
   </div>
 </section>
@@ -342,16 +397,16 @@
       <dd>#C08A3E — amber</dd>
     </div>
     <div>
+      <dt>Shadow</dt>
+      <dd>#8A5E22 — dark amber</dd>
+    </div>
+    <div>
       <dt>Dark field</dt>
       <dd>#141618 / #1C1E21</dd>
     </div>
     <div>
       <dt>Construction</dt>
       <dd>64 × 64 grid, whole-pixel coordinates</dd>
-    </div>
-    <div>
-      <dt>Rules</dt>
-      <dd>No rounded corners, no gradients, no nested outlines</dd>
     </div>
   </div>
 </section>
