@@ -12,9 +12,9 @@ public sealed class Perf1001ParamsArrayRule : IOperationRule
     public static readonly DiagnosticDescriptor RuleDescriptor = DiagnosticFactory.Create(
         "PERF1001",
         "Avoid empty params array allocation",
-        "'{0}' is a params method called without arguments. This allocates an empty array on every call.",
+        "'{0}' is a params method called without arguments. The compiler emits an empty array allocation; the JIT may remove it.",
         "Performance",
-        DiagnosticSeverity.Warning);
+        DiagnosticSeverity.Info);
 
     public string Id => "PERF1001";
 

@@ -11,9 +11,9 @@ public sealed class Perf1007EnumHasFlagRule : IOperationRule
     public static readonly DiagnosticDescriptor RuleDescriptor = DiagnosticFactory.Create(
         "PERF1007",
         "Avoid Enum.HasFlag boxing",
-        "Enum.HasFlag boxes its argument. Use a bitwise comparison instead.",
+        "Enum.HasFlag boxes its argument on older runtimes. Use a bitwise comparison instead.",
         "Performance",
-        DiagnosticSeverity.Warning);
+        DiagnosticSeverity.Info);
 
     public string Id => "PERF1007";
 
