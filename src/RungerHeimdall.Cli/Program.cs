@@ -45,6 +45,14 @@ internal static class Program
 
                 return BaselineCommand.CreateAsync(args).GetAwaiter().GetResult();
 
+            case "report":
+                if (!Microsoft.Build.Locator.MSBuildLocator.IsRegistered)
+                {
+                    Microsoft.Build.Locator.MSBuildLocator.RegisterDefaults();
+                }
+
+                return ReportCommand.RunAsync(args).GetAwaiter().GetResult();
+
             case "doctor":
                 return Doctor();
 
@@ -146,8 +154,10 @@ internal static class Program
         Console.WriteLine("  init       Create architecture.json from the current project name.");
         Console.WriteLine("             Use --strict to emit error-severity rules.");
         Console.WriteLine("  analyze    Run all analyzers and print findings.");
-        Console.WriteLine("             Use --format console|json|markdown.");
+        Console.WriteLine("             Use --format console|json|markdown|sarif.");
         Console.WriteLine("  baseline   Create heimdall-baseline.json from the current solution or project.");
+        Console.WriteLine("  report     Write hotpath-report.md, findings grouped by method.");
+        Console.WriteLine("             Use --output <file> to change the destination, or --output - for stdout.");
         Console.WriteLine("  doctor     Check the local environment and configuration.");
         Console.WriteLine("  --version  Print the version.");
         Console.WriteLine("  --help     Print this help.");

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://rungerheimdall.github.io/rungerheimdall/schemas/architecture.v1.json",
+  "version": 1,
+  "layers": [
+    { "name": "Domain", "namespaces": ["PerfAntiPatterns.Domain", "PerfAntiPatterns.Domain.*"], "rank": 0 },
+    { "name": "Infrastructure", "namespaces": ["PerfAntiPatterns.Infrastructure.*"], "rank": 2 }
+  ],
+  "rules": [
+    { "id": "ARCH1001", "kind": "layerDependency", "from": "Domain", "deny": ["Infrastructure"], "severity": "warning" }
+  ]
+}

@@ -20,11 +20,15 @@ internal sealed class AnalysisFinding
 
     public string File { get; init; } = string.Empty;
 
+    public string AbsoluteFile { get; init; } = string.Empty;
+
     public int Line { get; init; }
 
     public int Column { get; init; }
 
     public string Severity { get; init; } = string.Empty;
+
+    public string Method { get; init; } = string.Empty;
 }
 
 internal static class WorkspaceAnalyzer
@@ -105,7 +109,7 @@ internal static class WorkspaceAnalyzer
                 continue;
             }
 
-            if (argument is "--format" or "-f")
+            if (argument is "--format" or "-f" or "--output" or "-o")
             {
                 index++;
                 continue;
@@ -149,10 +153,38 @@ internal static class WorkspaceAnalyzer
                 RuleId = diagnostic.Id,
                 Message = diagnostic.GetMessage(),
                 File = hasLocation ? Path.GetRelativePath(root, span.Path).Replace('\\', '/') : string.Empty,
+                AbsoluteFile = hasLocation ? span.Path : string.Empty,
                 Line = hasLocation ? span.StartLinePosition.Line + 1 : 0,
                 Column = hasLocation ? span.StartLinePosition.Character + 1 : 0,
                 Severity = diagnostic.Severity.ToString(),
+                Method = hasLocation ? ResolveMethod(compilation, diagnostic) : "<project>",
             });
+        }
+    }
+
+    private static string ResolveMethod(Compilation compilation, Diagnostic diagnostic)
+    {
+        var tree = diagnostic.Location.SourceTree;
+        if (tree is null)
+        {
+            return "<project>";
+        }
+
+        var model = compilation.GetSemanticModel(tree);
+        var symbol = model.GetEnclosingSymbol(diagnostic.Location.SourceSpan.Start);
+
+        switch (symbol)
+        {
+            case null:
+                return "<unknown>";
+
+            case IMethodSymbol method:
+                return method.ToDisplayString();
+
+            default:
+                return symbol.ContainingType?.ToDisplayString()
+                    ?? symbol.ContainingSymbol?.ToDisplayString()
+                    ?? symbol.ToDisplayString();
         }
     }
 

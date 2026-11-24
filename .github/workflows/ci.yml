@@ -29,3 +29,25 @@ jobs:
 
       - name: Test
         run: dotnet test --no-build -c Release
+  sarif:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Build CLI
+        run: dotnet build src/RungerHeimdall.Cli -c Release
+
+      - name: Analyze the anti-pattern sample
+        run: dotnet run --project src/RungerHeimdall.Cli -c Release --no-build -- analyze samples/PerfAntiPatterns --format sarif > results.sarif
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif

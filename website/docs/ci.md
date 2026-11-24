@@ -30,8 +30,10 @@ jobs:
 
 ## SARIF output
 
+The CLI writes SARIF 2.1.0, which is what GitHub code scanning expects:
+
 ```bash
-dotnet build -p:ErrorLog=results.sarif
+heimdall analyze . --format sarif > results.sarif
 ```
 
 Upload the file to GitHub code scanning:
@@ -41,6 +43,8 @@ Upload the file to GitHub code scanning:
   with:
     sarif_file: results.sarif
 ```
+
+`dotnet build -p:ErrorLog=results.sarif` produces SARIF 1.0.0, which code scanning rejects. Use the CLI form when you need to upload.
 
 ## GitLab
 

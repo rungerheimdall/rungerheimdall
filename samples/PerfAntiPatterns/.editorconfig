@@ -1,0 +1,10 @@
+[*.cs]
+dotnet_diagnostic.PERF1001.severity = warning
+dotnet_diagnostic.PERF1007.severity = warning
+dotnet_diagnostic.PERF2001.severity = warning
+dotnet_diagnostic.PERF2002.severity = warning
+dotnet_diagnostic.PERF2003.severity = warning
+dotnet_diagnostic.PERF2005.severity = warning
+dotnet_diagnostic.PERF2006.severity = warning
+dotnet_diagnostic.PERF2007.severity = warning
+dotnet_diagnostic.PERF2008.severity = warning
