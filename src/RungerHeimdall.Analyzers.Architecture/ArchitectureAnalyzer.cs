@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -18,6 +19,13 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
         "Architecture",
         DiagnosticSeverity.Info);
 
+    internal static readonly DiagnosticDescriptor ExpiredExemptionDescriptor = DiagnosticFactory.Create(
+        "HDL9001",
+        "Expired architecture exemption",
+        "The exemption for '{0}' expired on {1}. Remove it or extend the expiry.",
+        "Architecture",
+        DiagnosticSeverity.Info);
+
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         ImmutableArray.Create(
             Arch1001LayerDependencyRule.RuleDescriptor,
@@ -28,16 +36,18 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
             Arch1006FrameworkAllowListRule.RuleDescriptor,
             Arch1007NoStaticMutableStateRule.RuleDescriptor,
             Arch1008EndpointForbiddenCreationRule.RuleDescriptor,
-            ConfigurationErrorDescriptor);
+            ConfigurationErrorDescriptor,
+            ExpiredExemptionDescriptor);
 
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
+        context.RegisterCompilationAction(ReportConfigurationDiagnostics);
         context.RegisterCompilationStartAction(OnCompilationStart);
     }
 
-    private static void OnCompilationStart(CompilationStartAnalysisContext context)
+    private static void ReportConfigurationDiagnostics(CompilationAnalysisContext context)
     {
         var found = ConfigLoader.TryLoad(
             context.Options.AdditionalFiles,
@@ -47,11 +57,37 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
 
         if (error is not null)
         {
-            context.RegisterCompilationEndAction(endContext =>
-            {
-                endContext.ReportDiagnostic(Diagnostic.Create(ConfigurationErrorDescriptor, Location.None, error));
-            });
+            context.ReportDiagnostic(Diagnostic.Create(ConfigurationErrorDescriptor, Location.None, error));
+            return;
         }
+
+        if (!found || config is null)
+        {
+            return;
+        }
+
+        var exemptions = ExemptionStore.Create(config.Exemptions, DateTime.UtcNow.Date);
+        foreach (var exemption in exemptions.GetExpired())
+        {
+            context.ReportDiagnostic(Diagnostic.Create(
+                ExpiredExemptionDescriptor,
+                Location.None,
+                exemption.Target,
+                exemption.ExpiresOn));
+        }
+    }
+
+    private static void OnCompilationStart(CompilationStartAnalysisContext context)
+    {
+        var found = ConfigLoader.TryLoad(
+            context.Options.AdditionalFiles,
+            context.CancellationToken,
+            out var config,
+            out _);
+
+        var exemptions = found && config is not null
+            ? ExemptionStore.Create(config.Exemptions, DateTime.UtcNow.Date)
+            : ExemptionStore.Empty;
 
         LayerIndex layers;
         ImmutableArray<IRule> rules;
@@ -80,6 +116,11 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
 
         context.RegisterSymbolAction(symbolContext =>
         {
+            if (exemptions.IsExempt(symbolContext.Symbol))
+            {
+                return;
+            }
+
             var engineContext = new SymbolContext(
                 symbolContext.Symbol,
                 symbolContext.Compilation,
@@ -91,6 +132,11 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
 
         context.RegisterOperationAction(operationContext =>
         {
+            if (exemptions.IsExempt(operationContext.ContainingSymbol))
+            {
+                return;
+            }
+
             var engineContext = new OperationContext(
                 operationContext.Operation,
                 operationContext.ContainingSymbol,
