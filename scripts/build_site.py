@@ -127,6 +127,10 @@ def main() -> None:
     shutil.copy2(ASSETS / "logo.svg", OUT / "assets" / "logo.svg")
     shutil.copy2(ASSETS / "index.html", OUT / "index.html")
 
+    brand = ROOT / "brand"
+    if brand.exists():
+        shutil.copytree(brand, OUT / "brand")
+
     for source, title, output in PAGES:
         raw = (DOCS / source).read_text(encoding="utf-8")
         body = rewrite_links(strip_front_matter(raw))

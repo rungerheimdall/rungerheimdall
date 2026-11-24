@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'website/**'
+      - 'brand/**'
       - 'scripts/build_site.py'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
