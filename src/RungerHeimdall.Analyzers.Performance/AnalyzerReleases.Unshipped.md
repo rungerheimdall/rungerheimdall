@@ -10,7 +10,7 @@ PERF1002 | Performance | Warning | Avoid Enumerable.Count() on a countable colle
 PERF1003 | Performance | Warning | Avoid ToList before foreach
 PERF1004 | Performance | Warning | Avoid string concatenation inside loops
 PERF1005 | Performance | Warning | Avoid capturing the loop variable in a closure
-PERF1006 | Performance | Warning | Avoid reading the system clock on a hot path
+PERF1006 | Performance | Info | Avoid reading the system clock on a hot path
 PERF1007 | Performance | Info | Avoid Enum.HasFlag boxing
 PERF1008 | Performance | Warning | Avoid the default comparer for a struct without a generic comparison interface
 PERF1009 | Performance | Warning | Avoid Substring allocations for parsing and comparison

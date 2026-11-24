@@ -16,7 +16,7 @@ public sealed class Perf1006ClockOnHotPathRule : IOperationRule
         "Avoid reading the system clock on a hot path",
         "'{0}' reads the system clock on a hot path. Inject TimeProvider and call GetUtcNow instead.",
         "Performance",
-        DiagnosticSeverity.Warning);
+        DiagnosticSeverity.Info);
 
     private static readonly HashSet<string> ClockProperties = new HashSet<string>(StringComparer.Ordinal)
     {

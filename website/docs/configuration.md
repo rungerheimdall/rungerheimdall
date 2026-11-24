@@ -81,6 +81,27 @@ dotnet_diagnostic.ARCH1001.severity = error
 dotnet_diagnostic.ARCH1004.severity = none
 ```
 
+## Hot path settings
+
+The performance analyzer recognises four hot path layers:
+
+| Layer | Source | Default |
+|-------|--------|---------|
+| L1 explicit | `[HotPath]` / `[ColdPath]` | on |
+| L2 framework | controller actions, hosted services, SignalR hubs, Minimal API handlers, Azure Functions, MassTransit consumers | on |
+| L3 structural | loops, iterators | on |
+| L4 naming | `Process*`, `Handle*`, `Execute*`, `Serialize*`, `Render*` | off |
+
+Two keys in `.editorconfig` control the optional parts:
+
+```ini
+[*.cs]
+rungerheimdall_hotpath_propagation = true
+rungerheimdall_hotpath_heuristic = false
+```
+
+`rungerheimdall_hotpath_propagation` treats a method as hot when it calls a hot method inside the same compilation, one layer deep. `rungerheimdall_hotpath_heuristic` enables the low-confidence naming layer. `[ColdPath]` always wins over every layer.
+
 ## Exemptions
 
 ```json

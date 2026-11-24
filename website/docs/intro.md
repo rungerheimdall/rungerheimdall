@@ -24,10 +24,10 @@ The analyzers target `netstandard2.0`, work with Visual Studio 2022 17.8+, Rider
 | Family | Rules | Purpose |
 |--------|-------|---------|
 | Architecture | ARCH1001–ARCH1008 | Layer boundaries, forbidden types and namespaces, folder/namespace consistency, interface requirements |
-| Allocation | PERF1001, PERF1002, PERF1003, PERF1004, PERF1007, PERF1009, PERF1010, PERF1012 | Deterministic allocation patterns |
+| Allocation | PERF1001–PERF1012 | Deterministic allocation patterns and hot path context |
 | Context-aware | PERF2001–PERF2008 | LINQ in loops, `async` misuse, blocking on tasks, repeated enumeration |
 
-Architecture rules and most allocation rules default to `warning`. `PERF1001` and `PERF1007` default to `info` because the .NET 9 JIT already removes the allocation in the common case; the context-aware rules also default to `info` because they depend on call-site context. Severity is configurable per rule or through `.editorconfig`.
+Architecture rules and most allocation rules default to `warning`. `PERF1001` and `PERF1007` default to `info` because the .NET 9 JIT already removes the allocation in the common case; `PERF1006` defaults to `info` because its benefit is testability rather than speed; the context-aware rules also default to `info` because they depend on call-site context. Severity is configurable per rule or through `.editorconfig`.
 
 ## Next steps
 

@@ -6,15 +6,16 @@ title: CLI
 # CLI
 
 ```bash
-dotnet tool install -g RungerHeimdall.Cli --version 1.0.1
+dotnet tool install -g RungerHeimdall.Cli --version 1.1.0
 ```
 
 | Command | Purpose |
 |---------|---------|
 | `heimdall init` | Create `architecture.json` using the current project file name as the namespace root. |
 | `heimdall init --strict` | Same, with every rule set to `error`. |
-| `heimdall analyze [path]` | Run all analyzers and print findings. Use `--format console`, `json` or `markdown`. |
+| `heimdall analyze [path]` | Run all analyzers and print findings. Use `--format console`, `json`, `markdown` or `sarif`. |
 | `heimdall baseline create [path]` | Scan a directory, solution or project and write `heimdall-baseline.json`. |
+| `heimdall report [path]` | Write `hotpath-report.md` with findings grouped by method. |
 | `heimdall doctor` | Print runtime details and whether a configuration file was found. |
 | `heimdall --version` | Print the tool version. |
 
@@ -28,6 +29,19 @@ Total: 1
 ```
 
 `--format markdown` prints the same findings as a table, ready for a pull request comment.
+
+`--format sarif` emits SARIF 2.1.0 with repository-relative paths, suitable for GitHub code scanning. See [CI](ci.md).
+
+## report
+
+```bash
+$ heimdall report .
+Created /repo/hotpath-report.md
+Findings: 25
+Methods: 9
+```
+
+The report groups findings by method, sorts the table by the number of findings, and repeats each group with file, line and message. Paste it into a pull request or keep it in the repository as a budget. Use `--output <file>` to change the destination, or `--output -` to print to stdout.
 
 ## init
 

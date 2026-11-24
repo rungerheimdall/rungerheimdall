@@ -7,7 +7,7 @@ title: Performance rules
 
 The family has two groups. Both honour `heimdall-baseline.json` and the exemptions declared in `architecture.json`: a `type` exemption suppresses every performance rule for that type, and a file-level baseline entry suppresses every performance rule in that file.
 
-**Allocation rules** (`PERF1001`–`PERF1012`) detect a deterministic allocation pattern. They do not try to guess whether code is on a hot path: if the pattern is present, it allocates. Severity defaults to `warning`, except `PERF1001` and `PERF1007`, which default to `info` because the .NET 9 JIT already eliminates the allocation in the common case (an escaping array and a non-constant flag argument are still reported).
+**Allocation rules** (`PERF1001`–`PERF1012`) detect a deterministic allocation pattern. They do not try to guess whether code is on a hot path: if the pattern is present, it allocates. Severity defaults to `warning`. `PERF1001` and `PERF1007` default to `info` because the .NET 9 JIT already eliminates the allocation in the common case (an escaping array and a non-constant flag argument are still reported). `PERF1006` also defaults to `info`: the benchmark shows no speed advantage, only the testability benefit.
 
 **Context-aware rules** (`PERF2001`–`PERF2008`) depend on where the code runs. They default to `info` and, where relevant, only fire inside loops, `[HotPath]` methods, or framework entry points such as controllers and hosted services. `PERF2001` is suppressed inside `[ColdPath]` methods; `PERF2004` defaults to `warning` because blocking on a task can deadlock regardless of context.
 
@@ -53,6 +53,27 @@ foreach (var item in items)
 
 Use `StringBuilder`. Both `a + b` and `a += b` are detected.
 
+## PERF1005 — Closure capturing the loop variable
+
+```csharp
+foreach (var item in items)
+{
+    Action callback = () => Console.WriteLine(item);
+    callback();
+}
+```
+
+The compiler allocates a closure object on every iteration. Replace the delegate with a plain statement, or move it outside the loop. Measured: 413 ns and 1,944 B versus 8.8 ns and 0 B for the manual loop.
+
+## PERF1006 — System clock on a hot path
+
+```csharp
+[HotPath]
+public long Stamp() => DateTime.Now.Ticks;
+```
+
+Inject `TimeProvider` and call `GetUtcNow()` instead. The rule fires inside `[HotPath]` and framework entry points, inside iterators and inside loops. It defaults to `info`: on .NET 9 the direct clock read is slightly faster, so the benefit is testability rather than throughput.
+
 ## PERF1007 — Enum.HasFlag boxing
 
 ```csharp
@@ -67,6 +88,14 @@ if ((options & Options.A) != 0) { }
 
 .NET 5+ treats `HasFlag` as a JIT intrinsic, so this rule defaults to `info`. A bitwise comparison is still faster on older runtimes and when the flag argument is not a constant. Benchmark: see [benchmarks](https://github.com/rungerheimdall/rungerheimdall/blob/main/docs/benchmarks.md).
 
+
+## PERF1008 — Default comparer for a struct
+
+```csharp
+EqualityComparer<Money>.Default.Equals(left, right);
+```
+
+`EqualityComparer<T>.Default` and `Comparer<T>.Default` box a struct that implements neither `IEquatable<T>` nor `IComparable<T>`. Implement the generic interface. Measured: 19.4 ns and 48 B versus 0.26 ns and 0 B.
 
 ## PERF1009 — Substring used for parsing or comparison
 
@@ -93,6 +122,14 @@ private static partial Regex StartsWithA();
 ```
 
 Field initializers are not reported because they run once per type load.
+
+## PERF1011 — Non-generic foreach over value types
+
+```csharp
+foreach (int item in arrayList) { }
+```
+
+`foreach` over `System.Collections.IEnumerable` boxes the enumerator and every element. Use `List<T>` or another generic collection. Measured: 41.7 ns and 48 B versus 5.7 ns and 0 B.
 
 ## PERF1012 — ToLower/ToUpper used for comparison
 

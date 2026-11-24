@@ -8,14 +8,14 @@ title: Getting started
 ## Install
 
 ```bash
-dotnet add package RungerHeimdall.Analyzers --version 1.0.1
+dotnet add package RungerHeimdall.Analyzers --version 1.1.0
 ```
 
 The meta package brings both the architecture and performance analyzers. If you only want one of them:
 
 ```bash
-dotnet add package RungerHeimdall.Analyzers.Architecture --version 1.0.1
-dotnet add package RungerHeimdall.Analyzers.Performance --version 1.0.1
+dotnet add package RungerHeimdall.Analyzers.Architecture --version 1.1.0
+dotnet add package RungerHeimdall.Analyzers.Performance --version 1.1.0
 ```
 
 ## Create a configuration
@@ -23,7 +23,7 @@ dotnet add package RungerHeimdall.Analyzers.Performance --version 1.0.1
 The CLI generates a configuration from your project name:
 
 ```bash
-dotnet tool install -g RungerHeimdall.Cli --version 1.0.1
+dotnet tool install -g RungerHeimdall.Cli --version 1.1.0
 heimdall init
 ```
 

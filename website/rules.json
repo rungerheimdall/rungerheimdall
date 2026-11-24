@@ -96,12 +96,36 @@
     "source": "Perf1004StringConcatInLoopRule.cs"
   },
   {
+    "id": "PERF1005",
+    "title": "Avoid capturing the loop variable in a closure",
+    "message": "The lambda captures the loop variable '{0}', allocating a closure on every iteration. Copy the value into a local before creating the delegate.",
+    "category": "Performance",
+    "severity": "Warning",
+    "source": "Perf1005ClosureLoopVariableRule.cs"
+  },
+  {
+    "id": "PERF1006",
+    "title": "Avoid reading the system clock on a hot path",
+    "message": "'{0}' reads the system clock on a hot path. Inject TimeProvider and call GetUtcNow instead.",
+    "category": "Performance",
+    "severity": "Info",
+    "source": "Perf1006ClockOnHotPathRule.cs"
+  },
+  {
     "id": "PERF1007",
     "title": "Avoid Enum.HasFlag boxing",
     "message": "Enum.HasFlag boxes its argument on older runtimes. Use a bitwise comparison instead.",
     "category": "Performance",
     "severity": "Info",
     "source": "Perf1007EnumHasFlagRule.cs"
+  },
+  {
+    "id": "PERF1008",
+    "title": "Avoid the default comparer for a struct without a generic comparison interface",
+    "message": "'{0}.Default' boxes every comparison of struct '{1}' because it does not implement {2}. Implement the generic interface or provide a custom comparer.",
+    "category": "Performance",
+    "severity": "Warning",
+    "source": "Perf1008StructDefaultComparerRule.cs"
   },
   {
     "id": "PERF1009",
@@ -118,6 +142,14 @@
     "category": "Performance",
     "severity": "Warning",
     "source": "Perf1010RegexSourceGeneratedRule.cs"
+  },
+  {
+    "id": "PERF1011",
+    "title": "Avoid foreach over a non-generic collection of value types",
+    "message": "foreach over the non-generic IEnumerable boxes every '{0}' element. Use a generic collection instead.",
+    "category": "Performance",
+    "severity": "Warning",
+    "source": "Perf1011ValueTypeForeachRule.cs"
   },
   {
     "id": "PERF1012",
