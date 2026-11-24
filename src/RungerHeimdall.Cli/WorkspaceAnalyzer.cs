@@ -1,0 +1,207 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.MSBuild;
+using RungerHeimdall.Analyzers.Architecture;
+using RungerHeimdall.Analyzers.Performance;
+
+namespace RungerHeimdall.Cli;
+
+internal sealed class AnalysisFinding
+{
+    public string RuleId { get; init; } = string.Empty;
+
+    public string Message { get; init; } = string.Empty;
+
+    public string File { get; init; } = string.Empty;
+
+    public int Line { get; init; }
+
+    public int Column { get; init; }
+
+    public string Severity { get; init; } = string.Empty;
+}
+
+internal static class WorkspaceAnalyzer
+{
+    public static async Task<List<AnalysisFinding>> RunAsync(string target)
+    {
+        var fullTarget = Path.GetFullPath(target);
+        var root = File.Exists(fullTarget) ? Path.GetDirectoryName(fullTarget)! : fullTarget;
+
+        var solutionPath = FindSolution(fullTarget);
+        var projectPaths = solutionPath is null ? FindProjects(fullTarget) : Array.Empty<string>();
+
+        if (solutionPath is null && projectPaths.Length == 0)
+        {
+            throw new InvalidOperationException($"No .sln or .csproj found at '{target}'.");
+        }
+
+        var analyzers = ImmutableArray.Create<DiagnosticAnalyzer>(
+            new ArchitectureAnalyzer(),
+            new PerformanceAnalyzer());
+
+        var findings = new List<AnalysisFinding>();
+
+        if (solutionPath is not null)
+        {
+            using var workspace = MSBuildWorkspace.Create();
+            workspace.LoadMetadataForReferencedProjects = true;
+
+            var solution = await workspace.OpenSolutionAsync(solutionPath);
+            foreach (var project in solution.Projects)
+            {
+                var compilation = await project.GetCompilationAsync();
+                if (compilation is not null)
+                {
+                    await CollectAsync(compilation, analyzers, findings, root);
+                }
+            }
+        }
+        else
+        {
+            foreach (var projectPath in projectPaths)
+            {
+                using var workspace = MSBuildWorkspace.Create();
+                workspace.LoadMetadataForReferencedProjects = true;
+
+                var project = await workspace.OpenProjectAsync(projectPath);
+                var compilation = await project.GetCompilationAsync();
+                if (compilation is not null)
+                {
+                    await CollectAsync(compilation, analyzers, findings, root);
+                }
+            }
+        }
+
+        findings.Sort((left, right) =>
+        {
+            var byFile = string.Compare(left.File, right.File, StringComparison.Ordinal);
+            if (byFile != 0)
+            {
+                return byFile;
+            }
+
+            var byLine = left.Line.CompareTo(right.Line);
+            return byLine != 0 ? byLine : string.Compare(left.RuleId, right.RuleId, StringComparison.Ordinal);
+        });
+
+        return findings;
+    }
+
+    public static string ResolveTarget(string[] args)
+    {
+        for (var index = 1; index < args.Length; index++)
+        {
+            var argument = args[index];
+
+            if (argument.Equals("create", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            if (argument is "--format" or "-f")
+            {
+                index++;
+                continue;
+            }
+
+            if (argument.StartsWith("--", StringComparison.Ordinal)
+                || argument.StartsWith("-", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            return argument;
+        }
+
+        return Environment.CurrentDirectory;
+    }
+
+    private static async Task CollectAsync(
+        Compilation compilation,
+        ImmutableArray<DiagnosticAnalyzer> analyzers,
+        List<AnalysisFinding> findings,
+        string root)
+    {
+        var withAnalyzers = compilation.WithAnalyzers(analyzers);
+        var diagnostics = await withAnalyzers.GetAnalyzerDiagnosticsAsync();
+
+        foreach (var diagnostic in diagnostics)
+        {
+            if (!IsRule(diagnostic.Id))
+            {
+                continue;
+            }
+
+            var span = diagnostic.Location.GetLineSpan();
+            if (string.IsNullOrEmpty(span.Path))
+            {
+                continue;
+            }
+
+            findings.Add(new AnalysisFinding
+            {
+                RuleId = diagnostic.Id,
+                Message = diagnostic.GetMessage(),
+                File = Path.GetRelativePath(root, span.Path).Replace('\\', '/'),
+                Line = span.StartLinePosition.Line + 1,
+                Column = span.StartLinePosition.Character + 1,
+                Severity = diagnostic.Severity.ToString(),
+            });
+        }
+    }
+
+    private static string? FindSolution(string path)
+    {
+        if (File.Exists(path))
+        {
+            return path.EndsWith(".sln", StringComparison.OrdinalIgnoreCase) ? path : null;
+        }
+
+        if (!Directory.Exists(path))
+        {
+            return null;
+        }
+
+        var solutions = Directory.GetFiles(path, "*.sln", SearchOption.TopDirectoryOnly);
+        return solutions.Length > 0 ? solutions[0] : null;
+    }
+
+    private static string[] FindProjects(string path)
+    {
+        if (File.Exists(path))
+        {
+            return path.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase)
+                ? new[] { path }
+                : Array.Empty<string>();
+        }
+
+        if (!Directory.Exists(path))
+        {
+            return Array.Empty<string>();
+        }
+
+        return Directory.GetFiles(path, "*.csproj", SearchOption.AllDirectories)
+            .Where(IsNotBuildOutput)
+            .ToArray();
+    }
+
+    private static bool IsNotBuildOutput(string path)
+    {
+        var normalized = path.Replace('\\', '/');
+        return normalized.IndexOf("/obj/", StringComparison.OrdinalIgnoreCase) < 0
+            && normalized.IndexOf("/bin/", StringComparison.OrdinalIgnoreCase) < 0;
+    }
+
+    private static bool IsRule(string id)
+    {
+        return id.StartsWith("ARCH", StringComparison.Ordinal)
+            || id.StartsWith("PERF", StringComparison.Ordinal);
+    }
+}

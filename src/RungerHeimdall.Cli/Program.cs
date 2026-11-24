@@ -29,6 +29,14 @@ internal static class Program
             case "init":
                 return Init(args);
 
+            case "analyze":
+                if (!Microsoft.Build.Locator.MSBuildLocator.IsRegistered)
+                {
+                    Microsoft.Build.Locator.MSBuildLocator.RegisterDefaults();
+                }
+
+                return AnalyzeCommand.RunAsync(args).GetAwaiter().GetResult();
+
             case "baseline":
                 if (!Microsoft.Build.Locator.MSBuildLocator.IsRegistered)
                 {
@@ -137,6 +145,8 @@ internal static class Program
         Console.WriteLine("Commands:");
         Console.WriteLine("  init       Create architecture.json from the current project name.");
         Console.WriteLine("             Use --strict to emit error-severity rules.");
+        Console.WriteLine("  analyze    Run all analyzers and print findings.");
+        Console.WriteLine("             Use --format console|json|markdown.");
         Console.WriteLine("  baseline   Create heimdall-baseline.json from the current solution or project.");
         Console.WriteLine("  doctor     Check the local environment and configuration.");
         Console.WriteLine("  --version  Print the version.");
