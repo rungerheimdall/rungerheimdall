@@ -1,14 +1,16 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using RungerHeimdall.Engine.Configuration;
 using RungerHeimdall.Engine.Diagnostics;
+using RungerHeimdall.Engine.Operations;
 using RungerHeimdall.Engine.Rules;
 using RungerHeimdall.Engine.Symbols;
 
 namespace RungerHeimdall.Analyzers.Architecture.Rules;
 
-public sealed class Arch1002ForbiddenTypeRule : ISymbolRule
+public sealed class Arch1002ForbiddenTypeRule : ISymbolRule, IOperationRule
 {
     public static readonly DiagnosticDescriptor RuleDescriptor = DiagnosticFactory.Create(
         "ARCH1002",
@@ -20,6 +22,8 @@ public sealed class Arch1002ForbiddenTypeRule : ISymbolRule
     private readonly ScopeMatcher _scope;
     private readonly string[] _forbiddenTypes;
     private readonly DiagnosticSeverity? _severityOverride;
+    private readonly ConcurrentDictionary<string, byte> _reported =
+        new ConcurrentDictionary<string, byte>(StringComparer.Ordinal);
 
     public Arch1002ForbiddenTypeRule(LayerIndex layers, RuleConfig config)
     {
@@ -44,7 +48,7 @@ public sealed class Arch1002ForbiddenTypeRule : ISymbolRule
             return;
         }
 
-        var reported = new HashSet<string>(StringComparer.Ordinal);
+        var containingKey = type.ToDisplayString();
 
         foreach (var referenced in TypeReferences.Enumerate(type))
         {
@@ -58,26 +62,109 @@ public sealed class Arch1002ForbiddenTypeRule : ISymbolRule
                 continue;
             }
 
-            var name = referenced.ToDisplayString();
-            if (!reported.Add(name))
+            var targetName = referenced.ToDisplayString();
+            if (!MarkReported(containingKey, targetName))
             {
                 continue;
             }
 
-            var location = type.Locations.Length > 0 ? type.Locations[0] : Location.None;
-            var diagnostic = _severityOverride.HasValue
-                ? Diagnostic.Create(
-                    RuleDescriptor,
-                    location,
-                    _severityOverride.Value,
-                    additionalLocations: null,
-                    properties: null,
-                    type.Name,
-                    name)
-                : Diagnostic.Create(RuleDescriptor, location, type.Name, name);
-
-            context.ReportDiagnostic(diagnostic);
+            Report(
+                context.ReportDiagnostic,
+                type.Locations.Length > 0 ? type.Locations[0] : Location.None,
+                type.Name,
+                targetName);
         }
+    }
+
+    public void Analyze(OperationContext context)
+    {
+        if (_scope.IsEmpty || _forbiddenTypes.Length == 0)
+        {
+            return;
+        }
+
+        var containingType = context.OwningSymbol?.ContainingType;
+        if (containingType is null || !_scope.Matches(containingType))
+        {
+            return;
+        }
+
+        var containingKey = containingType.ToDisplayString();
+
+        foreach (var symbol in OperationReferences.Enumerate(context.Operation))
+        {
+            if (context.CancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            var targetType = GetReferencedType(symbol);
+            if (targetType is null || !IsForbidden(targetType))
+            {
+                continue;
+            }
+
+            var targetName = targetType.ToDisplayString();
+            if (!MarkReported(containingKey, targetName))
+            {
+                continue;
+            }
+
+            Report(
+                context.ReportDiagnostic,
+                context.Operation.Syntax.GetLocation(),
+                containingType.Name,
+                targetName);
+        }
+    }
+
+    private bool MarkReported(string containingType, string targetType)
+    {
+        return _reported.TryAdd(containingType + "|" + targetType, 0);
+    }
+
+    private static ITypeSymbol? GetReferencedType(ISymbol symbol)
+    {
+        switch (symbol)
+        {
+            case INamedTypeSymbol type:
+                return type;
+
+            case IMethodSymbol method:
+                return method.ContainingType;
+
+            case IFieldSymbol field:
+                return field.ContainingType;
+
+            case IPropertySymbol property:
+                return property.ContainingType;
+
+            case IEventSymbol @event:
+                return @event.ContainingType;
+
+            default:
+                return symbol.ContainingType;
+        }
+    }
+
+    private void Report(
+        Action<Diagnostic> report,
+        Location location,
+        string containingName,
+        string targetName)
+    {
+        var diagnostic = _severityOverride.HasValue
+            ? Diagnostic.Create(
+                RuleDescriptor,
+                location,
+                _severityOverride.Value,
+                additionalLocations: null,
+                properties: null,
+                containingName,
+                targetName)
+            : Diagnostic.Create(RuleDescriptor, location, containingName, targetName);
+
+        report(diagnostic);
     }
 
     private bool IsForbidden(ITypeSymbol type)

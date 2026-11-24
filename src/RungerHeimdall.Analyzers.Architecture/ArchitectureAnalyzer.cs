@@ -83,5 +83,24 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
 
             engine.RunSymbolRules(engineContext);
         }, SymbolKind.NamedType);
+
+        context.RegisterOperationAction(operationContext =>
+        {
+            var engineContext = new OperationContext(
+                operationContext.Operation,
+                operationContext.ContainingSymbol,
+                operationContext.Compilation,
+                operationContext.ReportDiagnostic,
+                operationContext.CancellationToken);
+
+            engine.RunOperationRules(engineContext);
+        },
+        OperationKind.ObjectCreation,
+        OperationKind.Invocation,
+        OperationKind.FieldReference,
+        OperationKind.PropertyReference,
+        OperationKind.MethodReference,
+        OperationKind.EventReference,
+        OperationKind.TypeOf);
     }
 }
