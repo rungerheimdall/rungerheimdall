@@ -19,6 +19,13 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
         "Architecture",
         DiagnosticSeverity.Info);
 
+    internal static readonly DiagnosticDescriptor BaselineErrorDescriptor = DiagnosticFactory.Create(
+        "HDL9003",
+        "Invalid baseline file",
+        "{0}",
+        "Architecture",
+        DiagnosticSeverity.Info);
+
     internal static readonly DiagnosticDescriptor ExpiredExemptionDescriptor = DiagnosticFactory.Create(
         "HDL9001",
         "Expired architecture exemption",
@@ -37,6 +44,7 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
             Arch1007NoStaticMutableStateRule.RuleDescriptor,
             Arch1008EndpointForbiddenCreationRule.RuleDescriptor,
             ConfigurationErrorDescriptor,
+            BaselineErrorDescriptor,
             ExpiredExemptionDescriptor);
 
     public override void Initialize(AnalysisContext context)
@@ -58,7 +66,17 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
         if (error is not null)
         {
             context.ReportDiagnostic(Diagnostic.Create(ConfigurationErrorDescriptor, Location.None, error));
-            return;
+        }
+
+        var baseline = BaselineStore.Load(
+            context.Options.AdditionalFiles,
+            context.CancellationToken,
+            ReadProjectDirectory(context.Options),
+            out var baselineError);
+
+        if (baselineError is not null)
+        {
+            context.ReportDiagnostic(Diagnostic.Create(BaselineErrorDescriptor, Location.None, baselineError));
         }
 
         if (!found || config is null)
@@ -75,6 +93,8 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
                 exemption.Target,
                 exemption.ExpiresOn));
         }
+
+        _ = baseline;
     }
 
     private static void OnCompilationStart(CompilationStartAnalysisContext context)
@@ -89,13 +109,20 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
             ? ExemptionStore.Create(config.Exemptions, DateTime.UtcNow.Date)
             : ExemptionStore.Empty;
 
+        var projectDirectory = ReadProjectDirectory(context.Options);
+        var baseline = BaselineStore.Load(
+            context.Options.AdditionalFiles,
+            context.CancellationToken,
+            projectDirectory,
+            out _);
+
         LayerIndex layers;
         ImmutableArray<IRule> rules;
 
         if (found && config is not null)
         {
             layers = config.BuildLayerIndex();
-            rules = ArchitectureRuleFactory.Create(config, layers, ReadProjectDirectory(context.Options));
+            rules = ArchitectureRuleFactory.Create(config, layers, projectDirectory);
         }
         else
         {
@@ -121,10 +148,20 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
+            var report = new Action<Diagnostic>(diagnostic =>
+            {
+                if (baseline.IsSuppressed(diagnostic.Id, symbolContext.Symbol, diagnostic.Location))
+                {
+                    return;
+                }
+
+                symbolContext.ReportDiagnostic(diagnostic);
+            });
+
             var engineContext = new SymbolContext(
                 symbolContext.Symbol,
                 symbolContext.Compilation,
-                symbolContext.ReportDiagnostic,
+                report,
                 symbolContext.CancellationToken);
 
             engine.RunSymbolRules(engineContext);
@@ -137,11 +174,21 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
+            var report = new Action<Diagnostic>(diagnostic =>
+            {
+                if (baseline.IsSuppressed(diagnostic.Id, operationContext.ContainingSymbol, diagnostic.Location))
+                {
+                    return;
+                }
+
+                operationContext.ReportDiagnostic(diagnostic);
+            });
+
             var engineContext = new OperationContext(
                 operationContext.Operation,
                 operationContext.ContainingSymbol,
                 operationContext.Compilation,
-                operationContext.ReportDiagnostic,
+                report,
                 operationContext.CancellationToken);
 
             engine.RunOperationRules(engineContext);
