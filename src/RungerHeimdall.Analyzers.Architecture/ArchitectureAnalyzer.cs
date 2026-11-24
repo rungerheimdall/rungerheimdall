@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -22,6 +21,8 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         ImmutableArray.Create(
             Arch1001LayerDependencyRule.RuleDescriptor,
+            Arch1002ForbiddenTypeRule.RuleDescriptor,
+            Arch1003ForbiddenNamespaceRule.RuleDescriptor,
             ConfigurationErrorDescriptor);
 
     public override void Initialize(AnalysisContext context)
@@ -48,28 +49,25 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
         }
 
         LayerIndex layers;
-        DiagnosticSeverity? severityOverride = null;
+        ImmutableArray<IRule> rules;
 
         if (found && config is not null)
         {
             layers = config.BuildLayerIndex();
-            severityOverride = ReadSeverity(config, "ARCH1001", "layerDependency");
+            rules = ArchitectureRuleFactory.Create(config, layers);
         }
         else
         {
             layers = ConventionLayerResolver.Resolve(context.Compilation);
+            rules = ImmutableArray.Create<IRule>(new Arch1001LayerDependencyRule(layers));
         }
 
-        if (layers.IsEmpty)
+        if (layers.IsEmpty || rules.IsEmpty)
         {
             return;
         }
 
-        var engine = new RuleEngine(new IRule[]
-        {
-            new Arch1001LayerDependencyRule(layers, severityOverride),
-        });
-
+        var engine = new RuleEngine(rules);
         if (engine.IsEmpty)
         {
             return;
@@ -85,44 +83,5 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
 
             engine.RunSymbolRules(engineContext);
         }, SymbolKind.NamedType);
-    }
-
-    private static DiagnosticSeverity? ReadSeverity(ArchitectureConfig config, string ruleId, string kind)
-    {
-        foreach (var rule in config.Rules)
-        {
-            var matchesId = rule.Id.Equals(ruleId, StringComparison.OrdinalIgnoreCase);
-            var matchesKind = rule.Kind.Equals(kind, StringComparison.OrdinalIgnoreCase);
-
-            if (matchesId || matchesKind)
-            {
-                return ParseSeverity(rule.Severity);
-            }
-        }
-
-        return null;
-    }
-
-    private static DiagnosticSeverity? ParseSeverity(string? value)
-    {
-        if (string.IsNullOrEmpty(value))
-        {
-            return null;
-        }
-
-        switch (value!.ToLowerInvariant())
-        {
-            case "error":
-                return DiagnosticSeverity.Error;
-            case "warning":
-                return DiagnosticSeverity.Warning;
-            case "suggestion":
-            case "info":
-                return DiagnosticSeverity.Info;
-            case "hidden":
-                return DiagnosticSeverity.Hidden;
-            default:
-                return null;
-        }
     }
 }
