@@ -1029,7 +1029,7 @@ v1 仅英文诊断消息；中文文档独立维护；文案不用感叹号、�
 - 深色为主，等宽字体标题
 - 无圆角、无渐变、无霓虹色
 - 主色：北欧冷灰（`#1C1E21` / `#E6E8EB`）+ 单一强调色（琥珀 `#C08A3E` 或冰蓝 `#7BA7BC`）
-- Logo 方向：Bifrost 桥的极简三线抽象，或 Heimdall 号角（Gjallarhorn）的几何化单线
+- Logo：项目用 **Strata**（六块向上楔形，底部中间块半透明），组织用 **Concentric**（三重同心六边形）；均为直角几何，无描边圆角
 - 参考基调：Rust 文档站的克制、Vercel Docs 的排版、Linear 的密度
 
 ### 10.4 README 规范（交付物必备）
@@ -1540,7 +1540,8 @@ v1 仅英文诊断消息；中文文档独立维护；文案不用感叹号、�
 
 | 项 | 内容 |
 |----|------|
-| 全称 | RungerHeimdall |
+| 项目全称 | RungerHeimdall |
+| 组织名 | Rungerheimdall（GitHub 组织显示名；URL slug 为小写 `rungerheimdall`） |
 | 词源 | Heimdall：北欧神话中守望 Bifrost 桥的守护者 |
 | Tagline（EN） | Heimdall watches the bridge. We watch your architecture. |
 | Tagline（ZH） | 守护你的架构边界 |
@@ -1548,12 +1549,12 @@ v1 仅英文诊断消息；中文文档独立维护；文案不用感叹号、�
 | 包前缀 | `RungerHeimdall` |
 | CLI | `heimdall` |
 | 规则前缀 | `ARCH` / `PERF` / `META` / `HDL9xxx` |
-| Logo 方向 | Bifrost 三线抽象 / Gjallarhorn 号角单线几何 |
-| "Runger" 释义 | [TBD: 需 1 句话官方释义] |
-| Logo 产出 | 自绘（零预算）；外包待有赞助后再评估 |
+| 项目 logo | **Strata**：六个方块组成向上楔形，底部中间块 35% 透明度表示被阻断的依赖（`brand/project/`） |
+| 组织 logo | **Concentric**：三重同心六边形，最内层实心（`brand/org/`） |
+| Logo 产出 | 自绘 SVG + Pillow 导出的 PNG（零预算） |
 | Issue / PR 语言 | 英文为主，允许德语、法语、中文 |
-| 主色 | `#1C1E21`（深灰）/ `#E6E8EB`（浅灰）/ `#C08A3E`（琥珀） |
-| 禁用 | 圆角、渐变、紫绿霓虹、拟物化、emoji |
+| 主色 | `#C08A3E`（琥珀）/ `#8A5E22`（阴影）/ `#141618`（深色底）/ `#E6E8EB`（浅色纸） |
+| 禁用 | 圆角、渐变、紫绿霓虹、拟物化、emoji、组织/项目 logo 混用 |
 
 > 规则 ID 保留语义前缀而非品牌前缀：`ARCH1001` 比 `HDL1001` 更易读，也便于文档聚合。品牌只出现在包名与工具诊断（`HDL9xxx`）。
 
