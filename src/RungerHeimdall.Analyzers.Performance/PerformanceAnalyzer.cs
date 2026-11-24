@@ -13,7 +13,11 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
         ImmutableArray.Create(
             Perf1001ParamsArrayRule.RuleDescriptor,
             Perf1002CountRule.RuleDescriptor,
+            Perf1003ToListBeforeForeachRule.RuleDescriptor,
+            Perf1004StringConcatInLoopRule.RuleDescriptor,
             Perf1007EnumHasFlagRule.RuleDescriptor,
+            Perf1009SubstringSpanRule.RuleDescriptor,
+            Perf1010RegexSourceGeneratedRule.RuleDescriptor,
             Perf1012StringComparisonRule.RuleDescriptor);
 
     public override void Initialize(AnalysisContext context)
@@ -29,7 +33,11 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
         {
             new Perf1001ParamsArrayRule(),
             new Perf1002CountRule(),
+            new Perf1003ToListBeforeForeachRule(),
+            new Perf1004StringConcatInLoopRule(),
             new Perf1007EnumHasFlagRule(),
+            new Perf1009SubstringSpanRule(),
+            new Perf1010RegexSourceGeneratedRule(),
             new Perf1012StringComparisonRule(),
         });
 
@@ -48,6 +56,11 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
                 operationContext.CancellationToken);
 
             engine.RunOperationRules(engineContext);
-        }, OperationKind.Invocation, OperationKind.ObjectCreation);
+        },
+        OperationKind.Invocation,
+        OperationKind.ObjectCreation,
+        OperationKind.Loop,
+        OperationKind.Binary,
+        OperationKind.CompoundAssignment);
     }
 }
