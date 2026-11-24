@@ -54,7 +54,7 @@ If no `architecture.json` exists, the analyzer falls back to convention-based la
 `Api`, `Web`, `Endpoints` → rank 3
 `Host` → rank 4
 
-Only a small set of high-confidence rules runs in this mode, and everything is reported as a warning. Explicit configuration always wins.
+Only ARCH1001 runs in this mode; the other architecture rules need explicit configuration. The performance rules run without configuration, but a baseline or an exemption declared in `architecture.json` still applies to them. Explicit configuration always wins.
 
 ## Adopting on an existing codebase
 

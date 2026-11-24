@@ -18,6 +18,6 @@
     { "id": "ARCH1008", "kind": "endpointForbiddenCreation", "in": ["Api"], "deny": ["MyApp.Infrastructure.*"], "severity": "warning" }
   ],
   "exemptions": [
-    { "scope": "type", "target": "MyApp.Infrastructure.LegacyOrderAdapter", "reason": "迁移期临时豁免", "expiresOn": "2027-06-30" }
+    { "scope": "type", "target": "MyApp.Infrastructure.LegacyOrderAdapter", "reason": "temporary migration exemption", "expiresOn": "2027-06-30" }
   ]
 }

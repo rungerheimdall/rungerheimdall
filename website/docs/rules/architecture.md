@@ -42,7 +42,7 @@ Bans specific types inside a scope. Works on declarations and inside method bodi
 { "id": "ARCH1002", "kind": "forbiddenType", "in": ["Api", "Application"], "types": ["Microsoft.EntityFrameworkCore.DbContext", "Microsoft.EntityFrameworkCore.DbSet`1"] }
 ```
 
-`types` accepts simple names (`DbContext`), fully qualified names (`Microsoft.EntityFrameworkCore.DbContext`) and metadata names (`DbSet`1`).
+`types` accepts simple names (`DbContext`), fully qualified names (`Microsoft.EntityFrameworkCore.DbContext`) and metadata names (``DbSet`1``).
 
 ## ARCH1003 — Forbidden namespace reference
 

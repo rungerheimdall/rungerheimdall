@@ -15,9 +15,7 @@ heimdall baseline create .
 
 The command accepts a directory, a `.sln` file or a `.csproj` file. It runs the architecture and performance analyzers over every project and writes `heimdall-baseline.json` to the current directory.
 
-:::note
-Roslyn 4.8 cannot open `.slnx` solutions. When the target contains only `.slnx`, the command scans every `.csproj` instead.
-:::
+> **Note.** Roslyn 4.8 cannot open `.slnx` solutions. When the target contains only `.slnx`, the command scans every `.csproj` instead.
 
 ## Format
 

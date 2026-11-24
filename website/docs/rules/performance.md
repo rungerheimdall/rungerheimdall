@@ -5,9 +5,11 @@ title: Performance rules
 
 # Performance rules
 
-Every rule in this family detects a deterministic allocation pattern. They do not try to guess whether code is on a hot path. If a pattern is present, it allocates.
+The family has two groups. Both honour `heimdall-baseline.json` and the exemptions declared in `architecture.json`: a `type` exemption suppresses every performance rule for that type, and a file-level baseline entry suppresses every performance rule in that file.
 
-All rules default to `warning`.
+**Allocation rules** (`PERF1001`–`PERF1012`) detect a deterministic allocation pattern. They do not try to guess whether code is on a hot path: if the pattern is present, it allocates. Severity defaults to `warning`, except `PERF1001` and `PERF1007`, which default to `info` because the .NET 9 JIT already eliminates the allocation in the common case (an escaping array and a non-constant flag argument are still reported).
+
+**Context-aware rules** (`PERF2001`–`PERF2008`) depend on where the code runs. They default to `info` and, where relevant, only fire inside loops, `[HotPath]` methods, or framework entry points such as controllers and hosted services. `PERF2001` is suppressed inside `[ColdPath]` methods; `PERF2004` defaults to `warning` because blocking on a task can deadlock regardless of context.
 
 ## PERF1001 — Empty params array
 
@@ -20,6 +22,8 @@ public static void Log(string format, params object[] args) { }
 Use an overload without `params`, or pass `Array.Empty<object>()`.
 
 The rule inspects the implicit array creation operation that the compiler inserts, so an explicit `Log("ready", new object[0])` is not reported.
+
+The compiler emits the array allocation in IL, but .NET 9 removes it when the array does not escape. The rule therefore defaults to `info`: it still fires when the array escapes, where the allocation survives. Benchmark: see [benchmarks](https://github.com/rungerheimdall/rungerheimdall/blob/main/docs/benchmarks.md).
 
 ## PERF1002 — Enumerable.Count() on a countable collection
 
@@ -55,11 +59,14 @@ Use `StringBuilder`. Both `a + b` and `a += b` are detected.
 if (options.HasFlag(Options.A)) { }
 ```
 
-`HasFlag` boxes its argument. Use a bitwise comparison:
+`HasFlag` took an `Enum` argument and boxed it before .NET 5. Use a bitwise comparison:
 
 ```csharp
 if ((options & Options.A) != 0) { }
 ```
+
+.NET 5+ treats `HasFlag` as a JIT intrinsic, so this rule defaults to `info`. A bitwise comparison is still faster on older runtimes and when the flag argument is not a constant. Benchmark: see [benchmarks](https://github.com/rungerheimdall/rungerheimdall/blob/main/docs/benchmarks.md).
+
 
 ## PERF1009 — Substring used for parsing or comparison
 

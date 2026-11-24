@@ -6,7 +6,7 @@
 
 RungerHeimdall is a compiler-level guard for .NET: it turns architecture rules and hidden allocations into diagnostics you see in the IDE and in CI.
 
-**Status: pre-alpha.** Architecture rules ARCH1001–ARCH1008 and performance rules PERF1001, PERF1002, PERF1003, PERF1004, PERF1007, PERF1009, PERF1010, PERF1012 are implemented. Nothing is stable yet.
+**Status: 1.0.0.** Eight architecture rules (ARCH1001–ARCH1008) and sixteen performance rules (PERF1001–PERF1012, PERF2001–PERF2008) are implemented and covered by tests. See the [rule reference](https://rungerheimdall.github.io/rungerheimdall/rules.html) for exact behaviour and measured impact.
 
 ## Install
 
@@ -41,8 +41,16 @@ Without a configuration file the analyzer falls back to convention-based layer i
 | PERF1009 | Avoid `Substring` allocations for parsing and comparison |
 | PERF1010 | Prefer `[GeneratedRegex]` over `new Regex` |
 | PERF1012 | Avoid `ToLower`/`ToUpper` for comparison |
+| PERF2001 | Avoid LINQ inside loops on hot paths |
+| PERF2002 | Avoid `Task.Run` inside `async` methods |
+| PERF2003 | Avoid `async void` |
+| PERF2004 | Avoid `Task.Result` and `Task.Wait()` |
+| PERF2005 | Avoid enumerating an `IEnumerable<T>` twice |
+| PERF2006 | Avoid awaiting a `ValueTask` twice |
+| PERF2007 | Avoid `Task.FromResult` on hot paths |
+| PERF2008 | Avoid `Array.Resize` inside loops |
 
-All rules default to `warning`. Change severity per rule in `architecture.json`, or globally with `.editorconfig`:
+Architecture rules and most allocation rules default to `warning`. Rules whose allocation the .NET 9 JIT already removes (`PERF1001` empty `params`, `PERF1007` `Enum.HasFlag`) and the context-aware performance rules (`PERF2001`–`PERF2003`, `PERF2005`–`PERF2008`) default to `info`. Change severity per rule in `architecture.json`, or globally with `.editorconfig`:
 
 ```ini
 dotnet_diagnostic.ARCH1001.severity = error

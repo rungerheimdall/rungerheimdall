@@ -5,7 +5,9 @@ title: Configuration
 
 # Configuration
 
-`architecture.json` lives next to the project file. The analyzer package injects it automatically through `build/RungerHeimdall.Analyzers.Architecture.props`.
+`architecture.json` lives next to the project file. The architecture analyzer package injects it automatically through `build/RungerHeimdall.Analyzers.Architecture.props`. Installing the meta package `RungerHeimdall.Analyzers` brings both analyzers and this injection.
+
+If you install `RungerHeimdall.Analyzers.Performance` on its own, no injection happens: add the files manually so that baselines and exemptions reach the performance rules.
 
 ## File discovery
 
