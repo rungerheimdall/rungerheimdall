@@ -1,0 +1,194 @@
+[
+  {
+    "id": "ARCH1001",
+    "title": "Layer dependency direction",
+    "message": "'{0}' is in layer '{1}' but depends on '{2}' in layer '{3}'. Dependencies must flow inward.",
+    "category": "Architecture",
+    "severity": "Warning",
+    "source": "Arch1001LayerDependencyRule.cs"
+  },
+  {
+    "id": "ARCH1002",
+    "title": "Forbidden type reference",
+    "message": "'{0}' must not reference '{1}'. This type is banned inside this layer.",
+    "category": "Architecture",
+    "severity": "Warning",
+    "source": "Arch1002ForbiddenTypeRule.cs"
+  },
+  {
+    "id": "ARCH1003",
+    "title": "Forbidden namespace reference",
+    "message": "'{0}' must not reference namespace '{1}'. This dependency is banned inside this layer.",
+    "category": "Architecture",
+    "severity": "Warning",
+    "source": "Arch1003ForbiddenNamespaceRule.cs"
+  },
+  {
+    "id": "ARCH1004",
+    "title": "Namespace must match folder",
+    "message": "'{0}' is declared in namespace '{1}'. The folder implies namespace '{2}'.",
+    "category": "Architecture",
+    "severity": "Warning",
+    "source": "Arch1004NamespaceMatchesFolderRule.cs"
+  },
+  {
+    "id": "ARCH1005",
+    "title": "Repositories and services must be interfaces",
+    "message": "'{0}' must be an interface. Names ending with '{1}' are reserved for abstractions in this layer.",
+    "category": "Architecture",
+    "severity": "Warning",
+    "source": "Arch1005RequiredInterfaceRule.cs"
+  },
+  {
+    "id": "ARCH1006",
+    "title": "Layer must not reference disallowed frameworks",
+    "message": "'{0}' references '{1}' from '{2}'. Only allow-listed namespaces may be used in this layer.",
+    "category": "Architecture",
+    "severity": "Warning",
+    "source": "Arch1006FrameworkAllowListRule.cs"
+  },
+  {
+    "id": "ARCH1007",
+    "title": "Avoid static mutable state",
+    "message": "'{0}.{1}' is mutable static state. Prefer instance state or an injected abstraction.",
+    "category": "Architecture",
+    "severity": "Warning",
+    "source": "Arch1007NoStaticMutableStateRule.cs"
+  },
+  {
+    "id": "ARCH1008",
+    "title": "Endpoint layer must not create infrastructure types",
+    "message": "'{0}' must not create '{1}'. Resolve infrastructure through an abstraction instead.",
+    "category": "Architecture",
+    "severity": "Warning",
+    "source": "Arch1008EndpointForbiddenCreationRule.cs"
+  },
+  {
+    "id": "PERF1001",
+    "title": "Avoid empty params array allocation",
+    "message": "'{0}' is a params method called without arguments. The compiler emits an empty array allocation; the JIT may remove it.",
+    "category": "Performance",
+    "severity": "Info",
+    "source": "Perf1001ParamsArrayRule.cs"
+  },
+  {
+    "id": "PERF1002",
+    "title": "Avoid Enumerable.Count() on a countable collection",
+    "message": "'{0}.Count()' enumerates the sequence. Use the Count or Length property instead.",
+    "category": "Performance",
+    "severity": "Warning",
+    "source": "Perf1002CountRule.cs"
+  },
+  {
+    "id": "PERF1003",
+    "title": "Avoid ToList before foreach",
+    "message": "'ToList()' materializes the sequence only to iterate it. Iterate the source directly.",
+    "category": "Performance",
+    "severity": "Warning",
+    "source": "Perf1003ToListBeforeForeachRule.cs"
+  },
+  {
+    "id": "PERF1004",
+    "title": "Avoid string concatenation inside loops",
+    "message": "String concatenation inside a loop allocates a new string per iteration. Use StringBuilder.",
+    "category": "Performance",
+    "severity": "Warning",
+    "source": "Perf1004StringConcatInLoopRule.cs"
+  },
+  {
+    "id": "PERF1007",
+    "title": "Avoid Enum.HasFlag boxing",
+    "message": "Enum.HasFlag boxes its argument on older runtimes. Use a bitwise comparison instead.",
+    "category": "Performance",
+    "severity": "Info",
+    "source": "Perf1007EnumHasFlagRule.cs"
+  },
+  {
+    "id": "PERF1009",
+    "title": "Avoid Substring allocations for parsing and comparison",
+    "message": "'Substring' allocates a new string. Use a span-based overload or AsSpan instead.",
+    "category": "Performance",
+    "severity": "Warning",
+    "source": "Perf1009SubstringSpanRule.cs"
+  },
+  {
+    "id": "PERF1010",
+    "title": "Prefer GeneratedRegex over new Regex",
+    "message": "'Regex' is constructed at runtime. Use [GeneratedRegex] to generate the matcher at compile time.",
+    "category": "Performance",
+    "severity": "Warning",
+    "source": "Perf1010RegexSourceGeneratedRule.cs"
+  },
+  {
+    "id": "PERF1012",
+    "title": "Avoid ToLower/ToUpper for comparison",
+    "message": "'{0}' allocates a new string. Use StringComparison.OrdinalIgnoreCase instead.",
+    "category": "Performance",
+    "severity": "Warning",
+    "source": "Perf1012StringComparisonRule.cs"
+  },
+  {
+    "id": "PERF2001",
+    "title": "Avoid LINQ inside loops",
+    "message": "LINQ inside a loop allocates enumerators and delegates on every iteration. Use a manual loop or move the query out.",
+    "category": "Performance",
+    "severity": "Info",
+    "source": "Perf2001LinqInLoopRule.cs"
+  },
+  {
+    "id": "PERF2002",
+    "title": "Avoid Task.Run inside async methods",
+    "message": "'Task.Run' inside an async method adds a thread-pool hop without doing CPU-bound work. Await the operation directly.",
+    "category": "Performance",
+    "severity": "Info",
+    "source": "Perf2002TaskRunInAsyncRule.cs"
+  },
+  {
+    "id": "PERF2003",
+    "title": "Avoid async void",
+    "message": "'{0}' is async void. Exceptions cannot be observed. Return Task instead.",
+    "category": "Performance",
+    "severity": "Info",
+    "source": "Perf2003AsyncVoidRule.cs"
+  },
+  {
+    "id": "PERF2004",
+    "title": "Avoid blocking on tasks",
+    "message": "'{0}' blocks the calling thread and can deadlock in a synchronization context. Await the task instead.",
+    "category": "Performance",
+    "severity": "Warning",
+    "source": "Perf2004BlockingTaskRule.cs"
+  },
+  {
+    "id": "PERF2005",
+    "title": "Avoid enumerating an IEnumerable more than once",
+    "message": "'{0}' is enumerated more than once in '{1}'. Materialize it once or use a concrete collection.",
+    "category": "Performance",
+    "severity": "Info",
+    "source": "Perf2005MultipleEnumerationRule.cs"
+  },
+  {
+    "id": "PERF2006",
+    "title": "Avoid awaiting a ValueTask more than once",
+    "message": "'{0}' is awaited more than once in '{1}'. Convert it to a Task first or await it once.",
+    "category": "Performance",
+    "severity": "Info",
+    "source": "Perf2006ValueTaskReuseRule.cs"
+  },
+  {
+    "id": "PERF2007",
+    "title": "Avoid Task.FromResult on hot paths",
+    "message": "'Task.FromResult' allocates a new task on every call. Cache the completed task or return a value directly.",
+    "category": "Performance",
+    "severity": "Info",
+    "source": "Perf2007TaskFromResultRule.cs"
+  },
+  {
+    "id": "PERF2008",
+    "title": "Avoid Array.Resize inside loops",
+    "message": "'Array.Resize' copies the whole array on every call. Use a List<T> or ArrayPool<T> instead.",
+    "category": "Performance",
+    "severity": "Info",
+    "source": "Perf2008ArrayResizeInLoopRule.cs"
+  }
+]
