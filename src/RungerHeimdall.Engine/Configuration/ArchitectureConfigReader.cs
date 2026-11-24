@@ -96,11 +96,14 @@ internal static class ArchitectureConfigReader
                 Kind = kind!,
                 From = ruleObject.GetString("from"),
                 Severity = ruleObject.GetString("severity"),
+                MustBeInterface = ruleObject.GetBool("mustBeInterface") ?? false,
             };
 
             AddStrings(rule.Deny, ruleObject.GetArray("deny"));
             AddStrings(rule.In, ruleObject.GetArray("in"));
             AddStrings(rule.Types, ruleObject.GetArray("types"));
+            AddStrings(rule.Suffix, ruleObject.GetArray("suffix"));
+            AddStrings(rule.Allow, ruleObject.GetArray("allow"));
 
             config.Rules.Add(rule);
         }

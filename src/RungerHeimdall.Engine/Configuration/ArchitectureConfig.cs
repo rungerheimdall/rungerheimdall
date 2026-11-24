@@ -50,11 +50,17 @@ public sealed class RuleConfig
 
     public string? Severity { get; set; }
 
+    public bool MustBeInterface { get; set; }
+
     public List<string> Deny { get; } = new List<string>();
 
     public List<string> In { get; } = new List<string>();
 
     public List<string> Types { get; } = new List<string>();
+
+    public List<string> Suffix { get; } = new List<string>();
+
+    public List<string> Allow { get; } = new List<string>();
 }
 
 public sealed class ExemptionConfig

@@ -24,6 +24,10 @@ public sealed class ArchitectureAnalyzer : DiagnosticAnalyzer
             Arch1002ForbiddenTypeRule.RuleDescriptor,
             Arch1003ForbiddenNamespaceRule.RuleDescriptor,
             Arch1004NamespaceMatchesFolderRule.RuleDescriptor,
+            Arch1005RequiredInterfaceRule.RuleDescriptor,
+            Arch1006FrameworkAllowListRule.RuleDescriptor,
+            Arch1007NoStaticMutableStateRule.RuleDescriptor,
+            Arch1008EndpointForbiddenCreationRule.RuleDescriptor,
             ConfigurationErrorDescriptor);
 
     public override void Initialize(AnalysisContext context)

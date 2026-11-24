@@ -19,11 +19,18 @@ public sealed class Arch1001LayerDependencyRule : ISymbolRule
 
     private readonly LayerIndex _layers;
     private readonly DiagnosticSeverity? _severityOverride;
+    private readonly string? _fromLayer;
+    private readonly string[] _deniedLayers;
 
-    public Arch1001LayerDependencyRule(LayerIndex layers, DiagnosticSeverity? severityOverride = null)
+    public Arch1001LayerDependencyRule(
+        LayerIndex layers,
+        DiagnosticSeverity? severityOverride = null,
+        RuleConfig? config = null)
     {
         _layers = layers ?? throw new ArgumentNullException(nameof(layers));
         _severityOverride = severityOverride;
+        _fromLayer = config?.From;
+        _deniedLayers = config is null ? Array.Empty<string>() : config.Deny.ToArray();
     }
 
     public string Id => "ARCH1001";
@@ -53,7 +60,7 @@ public sealed class Arch1001LayerDependencyRule : ISymbolRule
             }
 
             var target = _layers.Match(referenced.ContainingNamespace);
-            if (target is null || target.Rank <= source.Rank)
+            if (target is null || !Violates(source, target))
             {
                 continue;
             }
@@ -86,5 +93,29 @@ public sealed class Arch1001LayerDependencyRule : ISymbolRule
 
             context.ReportDiagnostic(diagnostic);
         }
+    }
+
+    private bool Violates(LayerMatch source, LayerMatch target)
+    {
+        if (_deniedLayers.Length > 0)
+        {
+            if (_fromLayer is not null
+                && !source.Name.Equals(_fromLayer, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            foreach (var denied in _deniedLayers)
+            {
+                if (denied.Equals(target.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return target.Rank > source.Rank;
     }
 }
