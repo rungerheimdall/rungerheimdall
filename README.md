@@ -11,7 +11,7 @@ RungerHeimdall is a compiler-level guard for .NET: it turns architecture rules a
 ## Install
 
 ```bash
-dotnet add package RungerHeimdall.Analyzers --version 0.1.0-preview.4
+dotnet add package RungerHeimdall.Analyzers --version 1.0.0
 ```
 
 ## Quick start
@@ -51,7 +51,7 @@ dotnet_diagnostic.ARCH1001.severity = error
 ## CLI
 
 ```bash
-dotnet tool install -g RungerHeimdall.Cli --version 0.1.0-preview.4
+dotnet tool install -g RungerHeimdall.Cli --version 1.0.0
 
 heimdall init                      # create architecture.json
 heimdall init --strict             # create it with error severity

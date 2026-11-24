@@ -76,7 +76,7 @@ TEMPLATE = """<!DOCTYPE html>
     <nav>
 {nav}
     </nav>
-    <p class="sidebar-meta">0.1.0-preview.4</p>
+    <p class="sidebar-meta">1.0.0</p>
   </aside>
   <main class="content">
 {content}
