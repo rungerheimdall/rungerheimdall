@@ -1,5 +1,7 @@
 # RungerHeimdall
 
+<img src="https://raw.githubusercontent.com/rungerheimdall/rungerheimdall/main/brand/project/strata-128.png" width="64" height="64" alt="RungerHeimdall logo">
+
 > Heimdall watches the bridge. We watch your architecture.
 
 RungerHeimdall is a compiler-level guard for .NET: it turns architecture rules and hidden allocations into diagnostics you see in the IDE and in CI.

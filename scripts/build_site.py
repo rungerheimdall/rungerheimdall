@@ -51,13 +51,13 @@ TEMPLATE = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title} · RungerHeimdall</title>
 <meta name="description" content="Compiler-level architecture guard and allocation detection for .NET.">
-<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <header class="topbar">
   <a class="brand" href="index.html">
-    <img src="assets/logo.svg" alt="" width="22" height="22">
+    <img src="assets/logo.svg" alt="" width="26" height="26">
     <span>RungerHeimdall</span>
   </a>
   <nav class="topnav">
@@ -126,6 +126,7 @@ def main() -> None:
 
     shutil.copy2(ASSETS / "style.css", OUT / "assets" / "style.css")
     shutil.copy2(ASSETS / "logo.svg", OUT / "assets" / "logo.svg")
+    shutil.copy2(ASSETS / "favicon.svg", OUT / "assets" / "favicon.svg")
     shutil.copy2(ASSETS / "index.html", OUT / "index.html")
 
     brand = ROOT / "brand"

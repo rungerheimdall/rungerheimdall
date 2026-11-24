@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>RungerHeimdall</title>
 <meta name="description" content="Compiler-level architecture guard and allocation detection for .NET.">
-<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/style.css">
 <style>
   .hero { max-width: 960px; margin: 0 auto; padding: 6rem 1.5rem 5rem; border-bottom: 1px solid var(--border); }
+  .hero-mark { margin: 0 0 1.75rem; }
+  .hero-mark img { display: block; }
   .eyebrow { margin: 0 0 1.5rem; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
   .hero h1 { margin: 0 0 1.5rem; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.05; letter-spacing: -0.03em; }
   .hero p { max-width: 640px; margin: 0 0 2rem; font-size: 1.125rem; line-height: 1.7; color: var(--muted); }
@@ -35,7 +37,7 @@
 <body>
 <header class="topbar">
   <a class="brand" href="index.html">
-    <img src="assets/logo.svg" alt="" width="22" height="22">
+    <img src="assets/logo.svg" alt="" width="26" height="26">
     <span>RungerHeimdall</span>
   </a>
   <nav class="topnav">
@@ -47,6 +49,7 @@
 </header>
 <main>
   <section class="hero">
+    <div class="hero-mark"><img src="assets/logo.svg" alt="RungerHeimdall" width="76" height="76"></div>
     <p class="eyebrow">Roslyn analyzers for .NET</p>
     <h1>Guard the architecture.<br>Catch the allocations.</h1>
     <p>
