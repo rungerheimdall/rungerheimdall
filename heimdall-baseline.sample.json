@@ -1,0 +1,8 @@
+{
+  "$schema": "https://rungerheimdall.github.io/rungerheimdall/schemas/heimdall-baseline.v1.json",
+  "version": 1,
+  "entries": [
+    { "ruleId": "ARCH1001", "containingType": "MyApp.Domain.OrderService" },
+    { "ruleId": "ARCH1002", "file": "src/Api/OrdersEndpoint.cs" }
+  ]
+}

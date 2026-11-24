@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://rungerheimdall.github.io/rungerheimdall/schemas/heimdall-baseline.v1.json",
+  "title": "RungerHeimdall baseline",
+  "description": "Suppresses known architecture violations so existing codebases can adopt the analyzer incrementally.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "entries"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "const": 1
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ruleId"],
+        "properties": {
+          "ruleId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "containingType": {
+            "type": "string",
+            "description": "Fully qualified containing type name."
+          },
+          "file": {
+            "type": "string",
+            "description": "Source file path relative to the project directory."
+          }
+        },
+        "anyOf": [
+          { "required": ["containingType"] },
+          { "required": ["file"] }
+        ]
+      }
+    }
+  }
+}

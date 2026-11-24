@@ -1,0 +1,23 @@
+{
+  "$schema": "https://rungerheimdall.github.io/rungerheimdall/schemas/architecture.v1.json",
+  "version": 1,
+  "layers": [
+    { "name": "Domain", "namespaces": ["MyApp.Domain", "MyApp.Domain.*"], "rank": 0 },
+    { "name": "Application", "namespaces": ["MyApp.Application.*"], "rank": 1 },
+    { "name": "Infrastructure", "namespaces": ["MyApp.Infrastructure.*"], "rank": 2 },
+    { "name": "Api", "namespaces": ["MyApp.Api.*"], "rank": 3 }
+  ],
+  "rules": [
+    { "id": "ARCH1001", "kind": "layerDependency", "from": "Domain", "deny": ["Infrastructure", "Api"], "severity": "warning" },
+    { "id": "ARCH1002", "kind": "forbiddenType", "in": ["Api", "Application"], "types": ["Microsoft.EntityFrameworkCore.DbContext", "Microsoft.EntityFrameworkCore.DbSet`1"], "severity": "warning" },
+    { "id": "ARCH1003", "kind": "forbiddenNamespace", "in": ["Domain"], "deny": ["MyApp.Infrastructure.*"], "severity": "warning" },
+    { "id": "ARCH1004", "kind": "namespaceMatchesFolder", "in": ["Domain", "Application"], "severity": "warning" },
+    { "id": "ARCH1005", "kind": "requiredInterface", "in": ["Domain"], "suffix": ["Repository", "Service"], "mustBeInterface": true, "severity": "warning" },
+    { "id": "ARCH1006", "kind": "frameworkAllowList", "in": ["Domain"], "allow": ["System", "System.*", "Microsoft", "Microsoft.*"], "severity": "warning" },
+    { "id": "ARCH1007", "kind": "noStaticMutableState", "in": ["Domain", "Application"], "severity": "warning" },
+    { "id": "ARCH1008", "kind": "endpointForbiddenCreation", "in": ["Api"], "deny": ["MyApp.Infrastructure.*"], "severity": "warning" }
+  ],
+  "exemptions": [
+    { "scope": "type", "target": "MyApp.Infrastructure.LegacyOrderAdapter", "reason": "迁移期临时豁免", "expiresOn": "2027-06-30" }
+  ]
+}

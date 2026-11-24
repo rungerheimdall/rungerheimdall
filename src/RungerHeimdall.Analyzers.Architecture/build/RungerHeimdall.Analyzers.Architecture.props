@@ -1,0 +1,6 @@
+<Project>
+  <ItemGroup Condition="'$(RungerHeimdallAdditionalFiles)' != 'false'">
+    <AdditionalFiles Include="$(MSBuildProjectDirectory)/architecture.json" Condition="Exists('$(MSBuildProjectDirectory)/architecture.json')" />
+    <AdditionalFiles Include="$(MSBuildProjectDirectory)/heimdall-baseline.json" Condition="Exists('$(MSBuildProjectDirectory)/heimdall-baseline.json')" />
+  </ItemGroup>
+</Project>

@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="build\RungerHeimdall.Analyzers.Architecture.props" Pack="true" PackagePath="build" />
     <None Include="$(OutputPath)\RungerHeimdall.Analyzers.Architecture.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(OutputPath)\RungerHeimdall.Engine.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>

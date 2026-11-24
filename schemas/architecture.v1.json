@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://rungerheimdall.github.io/rungerheimdall/schemas/architecture.v1.json",
+  "title": "RungerHeimdall architecture configuration",
+  "description": "Layers, rules and exemptions for the RungerHeimdall architecture analyzer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "const": 1,
+      "description": "Configuration schema version. Only version 1 is supported."
+    },
+    "layers": {
+      "type": "array",
+      "description": "Layer definitions. Lower rank means closer to the domain core.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "namespaces"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rank": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+          },
+          "namespaces": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Namespace patterns. A trailing .* matches the namespace and its children."
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "layerDependency",
+              "forbiddenType",
+              "forbiddenNamespace",
+              "namespaceMatchesFolder",
+              "requiredInterface",
+              "frameworkAllowList",
+              "noStaticMutableState",
+              "endpointForbiddenCreation"
+            ]
+          },
+          "from": {
+            "type": "string",
+            "description": "Source layer for layerDependency rules."
+          },
+          "severity": {
+            "enum": ["error", "warning", "suggestion", "info", "hidden"]
+          },
+          "mustBeInterface": {
+            "type": "boolean",
+            "default": false
+          },
+          "in": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Layer names or namespace patterns that the rule applies to."
+          },
+          "deny": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Denied layers (layerDependency) or denied namespace patterns."
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Forbidden type names, full names or metadata names."
+          },
+          "suffix": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Name suffixes that must resolve to interfaces."
+          },
+          "allow": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Allowed namespace patterns for frameworkAllowList rules."
+          }
+        }
+      }
+    },
+    "exemptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scope", "target", "reason"],
+        "properties": {
+          "scope": {
+            "enum": ["type", "namespace", "member", "assembly"]
+          },
+          "target": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Required audit note explaining why the exemption exists."
+          },
+          "expiresOn": {
+            "type": "string",
+            "format": "date",
+            "description": "Expiry date in yyyy-MM-dd. Expired exemptions no longer suppress diagnostics."
+          }
+        }
+      }
+    }
+  }
+}
