@@ -40,6 +40,7 @@ Without a configuration file the analyzer falls back to convention-based layer i
 | PERF1005 | Avoid capturing the loop variable in a closure |
 | PERF1006 | Avoid reading the system clock on a hot path |
 | PERF1007 | Avoid `Enum.HasFlag` boxing |
+| PERF1008 | Avoid the default comparer for a struct without a generic interface |
 | PERF1009 | Avoid `Substring` allocations for parsing and comparison |
 | PERF1010 | Prefer `[GeneratedRegex]` over `new Regex` |
 | PERF1011 | Avoid `foreach` over a non-generic collection of value types |
