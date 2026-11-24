@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RungerHeimdall.Analyzers.Performance.Rules;
+using RungerHeimdall.Engine.HotPath;
 using RungerHeimdall.Engine.Rules;
 
 namespace RungerHeimdall.Analyzers.Performance;
@@ -18,7 +19,8 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
             Perf1007EnumHasFlagRule.RuleDescriptor,
             Perf1009SubstringSpanRule.RuleDescriptor,
             Perf1010RegexSourceGeneratedRule.RuleDescriptor,
-            Perf1012StringComparisonRule.RuleDescriptor);
+            Perf1012StringComparisonRule.RuleDescriptor,
+            Perf2001LinqInLoopRule.RuleDescriptor);
 
     public override void Initialize(AnalysisContext context)
     {
@@ -29,6 +31,8 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
 
     private static void OnCompilationStart(CompilationStartAnalysisContext context)
     {
+        var hotPath = new HotPathRegistry();
+
         var engine = new RuleEngine(new IRule[]
         {
             new Perf1001ParamsArrayRule(),
@@ -39,6 +43,7 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
             new Perf1009SubstringSpanRule(),
             new Perf1010RegexSourceGeneratedRule(),
             new Perf1012StringComparisonRule(),
+            new Perf2001LinqInLoopRule(hotPath),
         });
 
         if (engine.IsEmpty)
