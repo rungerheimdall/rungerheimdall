@@ -20,7 +20,11 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
             Perf1009SubstringSpanRule.RuleDescriptor,
             Perf1010RegexSourceGeneratedRule.RuleDescriptor,
             Perf1012StringComparisonRule.RuleDescriptor,
-            Perf2001LinqInLoopRule.RuleDescriptor);
+            Perf2001LinqInLoopRule.RuleDescriptor,
+            Perf2002TaskRunInAsyncRule.RuleDescriptor,
+            Perf2003AsyncVoidRule.RuleDescriptor,
+            Perf2004BlockingTaskRule.RuleDescriptor,
+            Perf2008ArrayResizeInLoopRule.RuleDescriptor);
 
     public override void Initialize(AnalysisContext context)
     {
@@ -44,12 +48,27 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
             new Perf1010RegexSourceGeneratedRule(),
             new Perf1012StringComparisonRule(),
             new Perf2001LinqInLoopRule(hotPath),
+            new Perf2002TaskRunInAsyncRule(),
+            new Perf2003AsyncVoidRule(),
+            new Perf2004BlockingTaskRule(),
+            new Perf2008ArrayResizeInLoopRule(),
         });
 
         if (engine.IsEmpty)
         {
             return;
         }
+
+        context.RegisterSymbolAction(symbolContext =>
+        {
+            var engineContext = new SymbolContext(
+                symbolContext.Symbol,
+                symbolContext.Compilation,
+                symbolContext.ReportDiagnostic,
+                symbolContext.CancellationToken);
+
+            engine.RunSymbolRules(engineContext);
+        }, SymbolKind.NamedType);
 
         context.RegisterOperationAction(operationContext =>
         {
@@ -66,6 +85,7 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
         OperationKind.ObjectCreation,
         OperationKind.Loop,
         OperationKind.Binary,
-        OperationKind.CompoundAssignment);
+        OperationKind.CompoundAssignment,
+        OperationKind.PropertyReference);
     }
 }
