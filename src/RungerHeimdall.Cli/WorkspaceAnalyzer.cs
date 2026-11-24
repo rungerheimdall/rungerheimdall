@@ -59,7 +59,7 @@ internal static class WorkspaceAnalyzer
                 var compilation = await project.GetCompilationAsync();
                 if (compilation is not null)
                 {
-                    await CollectAsync(compilation, analyzers, findings, root);
+                    await CollectAsync(compilation, analyzers, findings, root, ProjectDirectory(project));
                 }
             }
         }
@@ -74,7 +74,7 @@ internal static class WorkspaceAnalyzer
                 var compilation = await project.GetCompilationAsync();
                 if (compilation is not null)
                 {
-                    await CollectAsync(compilation, analyzers, findings, root);
+                    await CollectAsync(compilation, analyzers, findings, root, ProjectDirectory(project));
                 }
             }
         }
@@ -127,9 +127,11 @@ internal static class WorkspaceAnalyzer
         Compilation compilation,
         ImmutableArray<DiagnosticAnalyzer> analyzers,
         List<AnalysisFinding> findings,
-        string root)
+        string root,
+        string? projectDirectory)
     {
-        var withAnalyzers = compilation.WithAnalyzers(analyzers);
+        var options = CliAnalyzerOptions.Create(projectDirectory);
+        var withAnalyzers = compilation.WithAnalyzers(analyzers, options);
         var diagnostics = await withAnalyzers.GetAnalyzerDiagnosticsAsync();
 
         foreach (var diagnostic in diagnostics)
@@ -140,21 +142,23 @@ internal static class WorkspaceAnalyzer
             }
 
             var span = diagnostic.Location.GetLineSpan();
-            if (string.IsNullOrEmpty(span.Path))
-            {
-                continue;
-            }
+            var hasLocation = !string.IsNullOrEmpty(span.Path);
 
             findings.Add(new AnalysisFinding
             {
                 RuleId = diagnostic.Id,
                 Message = diagnostic.GetMessage(),
-                File = Path.GetRelativePath(root, span.Path).Replace('\\', '/'),
-                Line = span.StartLinePosition.Line + 1,
-                Column = span.StartLinePosition.Character + 1,
+                File = hasLocation ? Path.GetRelativePath(root, span.Path).Replace('\\', '/') : string.Empty,
+                Line = hasLocation ? span.StartLinePosition.Line + 1 : 0,
+                Column = hasLocation ? span.StartLinePosition.Character + 1 : 0,
                 Severity = diagnostic.Severity.ToString(),
             });
         }
+    }
+
+    private static string? ProjectDirectory(Project project)
+    {
+        return project.FilePath is null ? null : Path.GetDirectoryName(project.FilePath);
     }
 
     private static string? FindSolution(string path)
@@ -202,6 +206,7 @@ internal static class WorkspaceAnalyzer
     private static bool IsRule(string id)
     {
         return id.StartsWith("ARCH", StringComparison.Ordinal)
-            || id.StartsWith("PERF", StringComparison.Ordinal);
+            || id.StartsWith("PERF", StringComparison.Ordinal)
+            || id.StartsWith("HDL9", StringComparison.Ordinal);
     }
 }

@@ -100,9 +100,9 @@ public sealed class Arch1006FrameworkAllowListRule : ISymbolRule
                     additionalLocations: null,
                     properties: null,
                     type.Name,
-                    referenced.ToDisplayString(),
+                    SymbolFacts.DisplayType(referenced),
                     namespaceName)
-                : Diagnostic.Create(RuleDescriptor, location, type.Name, referenced.ToDisplayString(), namespaceName);
+                : Diagnostic.Create(RuleDescriptor, location, type.Name, SymbolFacts.DisplayType(referenced), namespaceName);
 
             context.ReportDiagnostic(diagnostic);
         }

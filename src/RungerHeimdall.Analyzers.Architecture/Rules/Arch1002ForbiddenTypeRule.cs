@@ -62,7 +62,7 @@ public sealed class Arch1002ForbiddenTypeRule : ISymbolRule, IOperationRule
                 continue;
             }
 
-            var targetName = referenced.ToDisplayString();
+            var targetName = SymbolFacts.DisplayType(referenced);
             if (!MarkReported(containingKey, targetName))
             {
                 continue;
@@ -104,7 +104,7 @@ public sealed class Arch1002ForbiddenTypeRule : ISymbolRule, IOperationRule
                 continue;
             }
 
-            var targetName = targetType.ToDisplayString();
+            var targetName = SymbolFacts.DisplayType(targetType);
             if (!MarkReported(containingKey, targetName))
             {
                 continue;

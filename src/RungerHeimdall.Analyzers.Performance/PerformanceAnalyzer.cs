@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RungerHeimdall.Analyzers.Performance.Rules;
+using RungerHeimdall.Engine.Configuration;
 using RungerHeimdall.Engine.HotPath;
 using RungerHeimdall.Engine.Rules;
 
@@ -65,12 +67,43 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
             return;
         }
 
+        var found = ConfigLoader.TryLoad(
+            context.Options.AdditionalFiles,
+            context.CancellationToken,
+            out var config,
+            out _);
+
+        var exemptions = found && config is not null
+            ? ExemptionStore.Create(config.Exemptions, DateTime.UtcNow.Date)
+            : ExemptionStore.Empty;
+
+        var baseline = BaselineStore.Load(
+            context.Options.AdditionalFiles,
+            context.CancellationToken,
+            ReadProjectDirectory(context.Options),
+            out _);
+
         context.RegisterSymbolAction(symbolContext =>
         {
+            if (exemptions.IsExempt(symbolContext.Symbol))
+            {
+                return;
+            }
+
+            var report = new Action<Diagnostic>(diagnostic =>
+            {
+                if (baseline.IsSuppressed(diagnostic.Id, symbolContext.Symbol, diagnostic.Location))
+                {
+                    return;
+                }
+
+                symbolContext.ReportDiagnostic(diagnostic);
+            });
+
             var engineContext = new SymbolContext(
                 symbolContext.Symbol,
                 symbolContext.Compilation,
-                symbolContext.ReportDiagnostic,
+                report,
                 symbolContext.CancellationToken);
 
             engine.RunSymbolRules(engineContext);
@@ -78,11 +111,26 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
 
         context.RegisterOperationAction(operationContext =>
         {
+            if (exemptions.IsExempt(operationContext.ContainingSymbol))
+            {
+                return;
+            }
+
+            var report = new Action<Diagnostic>(diagnostic =>
+            {
+                if (baseline.IsSuppressed(diagnostic.Id, operationContext.ContainingSymbol, diagnostic.Location))
+                {
+                    return;
+                }
+
+                operationContext.ReportDiagnostic(diagnostic);
+            });
+
             var engineContext = new OperationContext(
                 operationContext.Operation,
                 operationContext.ContainingSymbol,
                 operationContext.Compilation,
-                operationContext.ReportDiagnostic,
+                report,
                 operationContext.CancellationToken);
 
             engine.RunOperationRules(engineContext);
@@ -93,5 +141,18 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
         OperationKind.Binary,
         OperationKind.CompoundAssignment,
         OperationKind.PropertyReference);
+    }
+
+    private static string? ReadProjectDirectory(AnalyzerOptions options)
+    {
+        var provider = options.AnalyzerConfigOptionsProvider;
+        if (provider is null)
+        {
+            return null;
+        }
+
+        return provider.GlobalOptions.TryGetValue("build_property.MSBuildProjectDirectory", out var value)
+            ? value
+            : null;
     }
 }

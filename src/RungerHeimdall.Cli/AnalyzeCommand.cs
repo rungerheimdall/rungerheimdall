@@ -60,8 +60,12 @@ internal static class AnalyzeCommand
     {
         foreach (var finding in findings)
         {
+            var location = string.IsNullOrEmpty(finding.File)
+                ? "<project>"
+                : $"{finding.File}:{finding.Line}:{finding.Column}";
+
             Console.WriteLine(
-                $"{finding.File}:{finding.Line}:{finding.Column} {finding.Severity.ToLowerInvariant()} {finding.RuleId} {finding.Message}");
+                $"{location} {finding.Severity.ToLowerInvariant()} {finding.RuleId} {finding.Message}");
         }
 
         Console.WriteLine();
@@ -84,8 +88,11 @@ internal static class AnalyzeCommand
 
         foreach (var finding in findings)
         {
+            var file = string.IsNullOrEmpty(finding.File) ? "—" : finding.File;
+            var line = finding.Line == 0 ? "—" : finding.Line.ToString();
+
             Console.WriteLine(
-                $"| {finding.RuleId} | {finding.Severity} | {finding.File} | {finding.Line} | {Escape(finding.Message)} |");
+                $"| {finding.RuleId} | {finding.Severity} | {file} | {line} | {Escape(finding.Message)} |");
         }
 
         Console.WriteLine();

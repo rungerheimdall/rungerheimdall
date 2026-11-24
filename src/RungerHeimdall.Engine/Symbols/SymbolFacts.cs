@@ -5,6 +5,17 @@ namespace RungerHeimdall.Engine.Symbols;
 
 public static class SymbolFacts
 {
+    private static readonly SymbolDisplayFormat TypeFormat = new SymbolDisplayFormat(
+        globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
+        typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+        miscellaneousOptions: SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers);
+
+    public static string DisplayType(ITypeSymbol type)
+    {
+        return type.ToDisplayString(TypeFormat);
+    }
+
     public static string? GetNamespaceName(ISymbol? symbol)
     {
         var ns = symbol?.ContainingNamespace;

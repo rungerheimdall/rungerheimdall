@@ -82,7 +82,7 @@ public sealed class Arch1008EndpointForbiddenCreationRule : IOperationRule
             return;
         }
 
-        var targetName = targetType.ToDisplayString();
+        var targetName = SymbolFacts.DisplayType(targetType);
         var location = creation.Syntax.GetLocation();
         var diagnostic = _severityOverride.HasValue
             ? Diagnostic.Create(

@@ -65,7 +65,7 @@ public sealed class Arch1001LayerDependencyRule : ISymbolRule
                 continue;
             }
 
-            var targetName = referenced.ToDisplayString();
+            var targetName = SymbolFacts.DisplayType(referenced);
             if (!reported.Add(targetName))
             {
                 continue;
