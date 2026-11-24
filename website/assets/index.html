@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RungerHeimdall</title>
+<meta name="description" content="Compiler-level architecture guard and allocation detection for .NET.">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .hero { max-width: 960px; margin: 0 auto; padding: 6rem 1.5rem 5rem; border-bottom: 1px solid var(--border); }
+  .eyebrow { margin: 0 0 1.5rem; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .hero h1 { margin: 0 0 1.5rem; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.05; letter-spacing: -0.03em; }
+  .hero p { max-width: 640px; margin: 0 0 2rem; font-size: 1.125rem; line-height: 1.7; color: var(--muted); }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem; }
+  .button { display: inline-flex; align-items: center; padding: 0.7rem 1.25rem; border: 1px solid var(--accent); font-weight: 600; font-size: 0.9rem; }
+  .button.primary { background: var(--accent); color: #16181b; }
+  .button.primary:hover { background: var(--accent-dark); text-decoration: none; }
+  .button.secondary { color: var(--accent); }
+  .button.secondary:hover { background: rgba(192, 138, 62, 0.1); text-decoration: none; }
+  .install { display: inline-block; margin: 0; padding: 0.75rem 1rem; border: 1px solid var(--border); background: var(--surface); font-family: var(--mono); font-size: 0.85rem; color: var(--muted); }
+  .features { max-width: 960px; margin: 0 auto; padding: 4rem 1.5rem; border-bottom: 1px solid var(--border); }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; }
+  .feature { padding-top: 1.25rem; border-top: 1px solid var(--border); }
+  .feature h2 { margin: 0 0 0.75rem; font-size: 1.05rem; font-weight: 600; }
+  .feature p { margin: 0 0 1rem; font-size: 0.95rem; line-height: 1.7; color: var(--muted); }
+  .feature a { font-family: var(--mono); font-size: 0.8rem; }
+  .example { max-width: 960px; margin: 0 auto; padding: 4rem 1.5rem 5rem; }
+  .example-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; align-items: start; }
+  .example h2 { margin: 0 0 1rem; font-size: 1.5rem; line-height: 1.3; letter-spacing: -0.01em; }
+  .example p { margin: 0; font-size: 0.95rem; line-height: 1.7; color: var(--muted); }
+  .example pre { margin: 0; padding: 1.25rem; border: 1px solid var(--border); background: var(--surface); font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; overflow-x: auto; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <img src="assets/logo.svg" alt="" width="22" height="22">
+    <span>RungerHeimdall</span>
+  </a>
+  <nav class="topnav">
+    <a href="architecture-rules.html">Rules</a>
+    <a href="cli.html">CLI</a>
+    <a href="https://github.com/rungerheimdall/rungerheimdall">GitHub</a>
+  </nav>
+</header>
+<main>
+  <section class="hero">
+    <p class="eyebrow">Roslyn analyzers for .NET</p>
+    <h1>Guard the architecture.<br>Catch the allocations.</h1>
+    <p>
+      RungerHeimdall turns architecture rules and hidden allocations into diagnostics
+      you see in the IDE and in CI. No test project, no separate scan, no runtime profiler.
+    </p>
+    <div class="actions">
+      <a class="button primary" href="getting-started.html">Get started</a>
+      <a class="button secondary" href="architecture-rules.html">Browse rules</a>
+    </div>
+    <pre class="install"><code>dotnet add package RungerHeimdall.Analyzers --version 0.1.0-preview.3</code></pre>
+  </section>
+
+  <section class="features">
+    <div class="features-grid">
+      <article class="feature">
+        <h2>Architecture guard</h2>
+        <p>
+          Declare layers once. Domain cannot reference infrastructure, endpoints cannot
+          construct a DbContext, repositories must be interfaces. The rules run while you type.
+        </p>
+        <a href="architecture-rules.html">Architecture rules</a>
+      </article>
+      <article class="feature">
+        <h2>Allocation detection</h2>
+        <p>
+          Empty params arrays, ToList before foreach, string concatenation inside loops,
+          Enum.HasFlag boxing. Deterministic patterns the compiler will not warn about.
+        </p>
+        <a href="performance-rules.html">Performance rules</a>
+      </article>
+      <article class="feature">
+        <h2>Incremental adoption</h2>
+        <p>
+          Freeze existing violations in a baseline, declare temporary exemptions with an
+          expiry date, and report only what new code breaks.
+        </p>
+        <a href="baseline.html">Baseline</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="example">
+    <div class="example-grid">
+      <div>
+        <h2>A boundary violation, at the moment it happens</h2>
+        <p>
+          The analyzer reads your layer definitions and reports the dependency before it
+          reaches review. The same rule fails the build in CI.
+        </p>
+      </div>
+      <pre><code>ARCH1001  'OrderService' is in layer 'Domain' but
+depends on 'SqlRepository' in layer 'Infrastructure'.
+Dependencies must flow inward.
+
+Domain is the business core. It should not know
+about persistence.
+
+  1. Define IOrderRepository in Domain.
+  2. Implement it in Infrastructure.
+  3. Inject it at the Api layer.</code></pre>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <span>MIT licensed. Copyright © 2026 RungerHeimdall contributors.</span>
+</footer>
+</body>
+</html>
