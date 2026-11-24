@@ -10,7 +10,11 @@ namespace RungerHeimdall.Analyzers.Performance;
 public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
 {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ImmutableArray.Create(Perf1002CountRule.RuleDescriptor);
+        ImmutableArray.Create(
+            Perf1001ParamsArrayRule.RuleDescriptor,
+            Perf1002CountRule.RuleDescriptor,
+            Perf1007EnumHasFlagRule.RuleDescriptor,
+            Perf1012StringComparisonRule.RuleDescriptor);
 
     public override void Initialize(AnalysisContext context)
     {
@@ -23,7 +27,10 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
     {
         var engine = new RuleEngine(new IRule[]
         {
+            new Perf1001ParamsArrayRule(),
             new Perf1002CountRule(),
+            new Perf1007EnumHasFlagRule(),
+            new Perf1012StringComparisonRule(),
         });
 
         if (engine.IsEmpty)
@@ -41,6 +48,6 @@ public sealed class PerformanceAnalyzer : DiagnosticAnalyzer
                 operationContext.CancellationToken);
 
             engine.RunOperationRules(engineContext);
-        }, OperationKind.Invocation);
+        }, OperationKind.Invocation, OperationKind.ObjectCreation);
     }
 }
