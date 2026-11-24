@@ -279,7 +279,7 @@ internal sealed class JsonParser
         while (_position < _text.Length)
         {
             var current = _text[_position];
-            if (current == ' ' || current == '\t' || current == '\r' || current == '\n')
+            if (current == ' ' || current == '\t' || current == '\r' || current == '\n' || current == '\uFEFF')
             {
                 _position++;
                 continue;

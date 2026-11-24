@@ -4,12 +4,12 @@
 
 RungerHeimdall is a compiler-level guard for .NET: it turns architecture rules and hidden allocations into diagnostics you see in the IDE and in CI.
 
-**Status: pre-alpha.** Architecture rules ARCH1001–ARCH1008 are implemented, the performance analyzer currently ships PERF1002. Nothing is stable yet.
+**Status: pre-alpha.** Architecture rules ARCH1001–ARCH1008 are implemented. The performance analyzer currently ships PERF1001, PERF1002, PERF1007 and PERF1012. Nothing is stable yet.
 
 ## Install
 
 ```bash
-dotnet add package RungerHeimdall.Analyzers --version 0.1.0-preview.1
+dotnet add package RungerHeimdall.Analyzers --version 0.1.0-preview.2
 ```
 
 ## Quick start
