@@ -113,6 +113,56 @@
     letter-spacing: 0.02em;
   }
 
+  .badge {
+    display: inline-block;
+    margin: 0 0 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .selected {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .selected .preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: #121416;
+  }
+
+  .selected .preview img {
+    width: 200px;
+    height: 200px;
+  }
+
+  .selected .details {
+    background: var(--surface);
+    padding: 1.75rem;
+  }
+
+  .archived {
+    opacity: 0.45;
+  }
+
+  .archived .name {
+    font-size: 0.9rem;
+  }
+
+  .archived .idea {
+    font-size: 0.8rem;
+  }
+
   .spec {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -149,33 +199,117 @@
     color: #6b7077;
     font-size: 0.8rem;
   }
+
+  @media (max-width: 760px) {
+    .selected { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
 <header>
   <h1>RungerHeimdall identity exploration</h1>
   <p class="sub">
-    Two marks, one system. The project mark has to survive a 16 px avatar and a NuGet icon.
-    The organization mark is built for RungerHeimdall as an organization: larger, quieter,
-    and not tied to a single product. Both use straight segments, mitred joins and negative space,
-    with no rounded corners.
+    The organization mark is decided: <strong>Concentric</strong>. The project mark is on its second
+    round. Round 1 leaned on bridges and letterforms; round 2 moves toward architectural
+    structures — a keystone, a truss, a rune. Same construction rules throughout: 64 × 64 grid,
+    straight segments, mitred joins, no rounded corners.
   </p>
 </header>
 
 <section>
-  <h2>Project — RungerHeimdall</h2>
+  <h2>Organization — Rungerheimdall · selected</h2>
+  <div class="selected">
+    <div class="preview">
+      <img src="org/concentric-dark-460.png" alt="Concentric organization mark">
+    </div>
+    <div class="details">
+      <p class="badge">Selected</p>
+      <p class="name">Concentric</p>
+      <p class="idea">
+        Three nested realms with the innermost one filled. Territory, seal, runic stone.
+        Drawn as filled polygons rather than strokes so the joins stay perfectly mitred at any size.
+        The 460 px export above is the GitHub avatar master; a transparent version is included.
+      </p>
+      <p class="meta">territory · seal · nested · avatar-safe</p>
+    </div>
+  </div>
+  <div class="spec">
+    <div>
+      <dt>Avatar master</dt>
+      <dd>460 × 460 PNG, dark field</dd>
+    </div>
+    <div>
+      <dt>Transparent</dt>
+      <dd>460 × 460 PNG, amber on alpha</dd>
+    </div>
+    <div>
+      <dt>Vector</dt>
+      <dd>org/org-01-concentric.svg</dd>
+    </div>
+    <div>
+      <dt>Color</dt>
+      <dd>#C08A3E on #141618</dd>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Project — round 2</h2>
   <div class="grid">
     <article class="card">
       <div class="marks">
-        <div class="mark dark"><img src="project/heimdall-01-bifrost.svg" alt="Bifrost bridge mark"></div>
-        <div class="mark light"><img src="project/heimdall-01-bifrost.svg" alt="Bifrost bridge mark on light"></div>
+        <div class="mark dark"><img src="project/heimdall-04-keystone.svg" alt="Keystone mark"></div>
+        <div class="mark light"><img src="project/heimdall-04-keystone.svg" alt="Keystone mark on light"></div>
+      </div>
+      <p class="name">04 — Keystone</p>
+      <p class="idea">
+        A single arch with one solid block at its crown. The keystone is the piece that keeps
+        the structure standing, which is exactly what an architecture rule is. Two elements,
+        no decoration, reads at 16 px.
+      </p>
+      <p class="meta">constraint · structure · two elements</p>
+    </article>
+
+    <article class="card">
+      <div class="marks">
+        <div class="mark dark"><img src="project/heimdall-05-truss.svg" alt="Truss mark"></div>
+        <div class="mark light"><img src="project/heimdall-05-truss.svg" alt="Truss mark on light"></div>
+      </div>
+      <p class="name">05 — Truss</p>
+      <p class="idea">
+        A bridge deck with a trapezoidal truss and two vertical posts. Engineering rather than
+        symbolism: the mark looks like a structure that carries load, not a signal icon.
+      </p>
+      <p class="meta">load · engineering · structural</p>
+    </article>
+
+    <article class="card">
+      <div class="marks">
+        <div class="mark dark"><img src="project/heimdall-06-rune.svg" alt="Rune mark"></div>
+        <div class="mark light"><img src="project/heimdall-06-rune.svg" alt="Rune mark on light"></div>
+      </div>
+      <p class="name">06 — Rune</p>
+      <p class="idea">
+        Two uprights crossed by a single diagonal, cut like a runic letter. The most distinct
+        silhouette of the six attempts and the one that carries the Nordic lineage without
+        quoting a literal horn or bridge.
+      </p>
+      <p class="meta">rune · lineage · distinctive</p>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2>Project — round 1 · archived</h2>
+  <div class="grid archived">
+    <article class="card">
+      <div class="marks">
+        <div class="mark dark"><img src="project/heimdall-01-bifrost.svg" alt="Bifrost mark"></div>
+        <div class="mark light"><img src="project/heimdall-01-bifrost.svg" alt="Bifrost mark on light"></div>
       </div>
       <p class="name">01 — Bifrost</p>
-      <p class="idea">
-        Two arches and a deck. The bridge is the boundary; the pier lines give it structure
-        instead of looking like a signal icon. Reads clearly down to 24 px.
-      </p>
-      <p class="meta">bridge · boundary · structure</p>
+      <p class="idea">Two arches and a deck. Read too close to a wireless signal icon at small sizes.</p>
+      <p class="meta">superseded</p>
     </article>
 
     <article class="card">
@@ -184,11 +318,8 @@
         <div class="mark light"><img src="project/heimdall-02-h-monogram.svg" alt="H monogram mark on light"></div>
       </div>
       <p class="name">02 — H Monogram</p>
-      <p class="idea">
-        The letter H with the arch folded into its crossbar. Strongest silhouette of the three,
-        works as an app icon, a favicon and a stamp.
-      </p>
-      <p class="meta">monogram · arch · 16 px safe</p>
+      <p class="idea">A letter first, a concept second. Legible, but it could belong to any product.</p>
+      <p class="meta">superseded</p>
     </article>
 
     <article class="card">
@@ -197,55 +328,8 @@
         <div class="mark light"><img src="project/heimdall-03-watchtower.svg" alt="Watchtower mark on light"></div>
       </div>
       <p class="name">03 — Watchtower</p>
-      <p class="idea">
-        A hexagonal keep with the bridge inside it and a single point at the centre.
-        The most literal "guard" reading, and the best fit for a badge or a VS extension tile.
-      </p>
-      <p class="meta">keep · eye · badge</p>
-    </article>
-  </div>
-</section>
-
-<section>
-  <h2>Organization — RungerHeimdall</h2>
-  <div class="grid">
-    <article class="card">
-      <div class="marks">
-        <div class="mark dark"><img src="org/org-01-concentric.svg" alt="Concentric mark"></div>
-        <div class="mark light"><img src="org/org-01-concentric.svg" alt="Concentric mark on light"></div>
-      </div>
-      <p class="name">01 — Concentric</p>
-      <p class="idea">
-        Three nested realms with the innermost one filled. Reads as a territory, a seal or a
-        runic stone. Scales to a 40 px GitHub avatar without turning into noise.
-      </p>
-      <p class="meta">territory · seal · nested</p>
-    </article>
-
-    <article class="card">
-      <div class="marks">
-        <div class="mark dark"><img src="org/org-02-canopy.svg" alt="Canopy mark"></div>
-        <div class="mark light"><img src="org/org-02-canopy.svg" alt="Canopy mark on light"></div>
-      </div>
-      <p class="name">02 — Canopy</p>
-      <p class="idea">
-        A tree reduced to seven segments: trunk, roots, branches. It reads as an ecosystem
-        rather than a single tool, which fits an organization that will host more than one project.
-      </p>
-      <p class="meta">ecosystem · growth · organization scale</p>
-    </article>
-
-    <article class="card">
-      <div class="marks">
-        <div class="mark dark"><img src="org/org-03-gate.svg" alt="Gate mark"></div>
-        <div class="mark light"><img src="org/org-03-gate.svg" alt="Gate mark on light"></div>
-      </div>
-      <p class="name">03 — Gate</p>
-      <p class="idea">
-        The wall with a single arch cut into it. The most architectural option, and the one
-        that pairs best with the project's bridge when both marks appear together.
-      </p>
-      <p class="meta">threshold · boundary · architectural</p>
+      <p class="idea">A hexagonal keep with an eye. Too close to security-vendor iconography.</p>
+      <p class="meta">superseded</p>
     </article>
   </div>
 </section>
@@ -263,7 +347,7 @@
     </div>
     <div>
       <dt>Construction</dt>
-      <dd>64 × 64 grid, 2.5–8 px strokes, mitred joins</dd>
+      <dd>64 × 64 grid, whole-pixel coordinates</dd>
     </div>
     <div>
       <dt>Rules</dt>
@@ -273,8 +357,8 @@
 </section>
 
 <footer>
-  Open any SVG in a vector editor to inspect the construction. PNG exports for the NuGet icon
-  and GitHub avatars are generated after a mark is selected.
+  Open any SVG in a vector editor to inspect the construction. Exports are produced by
+  scripts/export_brand.py so the PNGs and the vectors stay in sync.
 </footer>
 </body>
 </html>
