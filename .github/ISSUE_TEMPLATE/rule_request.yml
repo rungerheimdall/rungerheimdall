@@ -1,0 +1,31 @@
+name: Rule request
+description: Suggest a new architecture or performance rule
+labels: ["rule-request"]
+body:
+  - type: dropdown
+    id: family
+    attributes:
+      label: Family
+      options:
+        - Architecture
+        - Performance
+    validations:
+      required: true
+  - type: textarea
+    id: pattern
+    attributes:
+      label: Which pattern should be reported
+      render: csharp
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters
+      description: For a performance rule, a benchmark is the strongest argument.
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: Suggested fix

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://rungerheimdall.github.io/rungerheimdall/
+    about: Install steps, configuration, rule reference and benchmarks.
+  - name: Rule reference
+    url: https://rungerheimdall.github.io/rungerheimdall/rules.html
+    about: Every rule with its default severity and measured impact.

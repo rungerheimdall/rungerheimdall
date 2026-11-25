@@ -1,0 +1,53 @@
+name: Bug report
+description: Something behaves incorrectly
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a diagnostic that fires on correct code, use the false positive form instead. It gets priority.
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: The code, the configuration and the command that produced it.
+      render: csharp
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package or CLI version
+      placeholder: 1.1.1
+    validations:
+      required: true
+  - type: input
+    id: sdk
+    attributes:
+      label: .NET SDK
+      placeholder: 9.0.312
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where it happens
+      options:
+        - dotnet build
+        - Visual Studio
+        - Rider
+        - heimdall CLI
+    validations:
+      required: true

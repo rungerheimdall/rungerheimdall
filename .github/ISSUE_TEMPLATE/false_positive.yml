@@ -1,0 +1,40 @@
+name: False positive
+description: A diagnostic fires on code that is correct
+labels: ["false-positive"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        False positives are the top priority. A rule that reports correct code gets uninstalled, so the faster we can reproduce it, the faster it is fixed or downgraded.
+  - type: input
+    id: rule
+    attributes:
+      label: Rule ID
+      placeholder: PERF1004
+    validations:
+      required: true
+  - type: textarea
+    id: code
+    attributes:
+      label: Code that triggers it
+      render: csharp
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why this is not a violation
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: architecture.json, if any
+      render: json
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      placeholder: 1.1.1
+    validations:
+      required: true
